@@ -1,0 +1,50 @@
+# data/disease_index.py
+# Auto-derived from training.csv (prognosis column)
+# DO NOT reorder once models are trained
+
+DISEASE_INDEX = {
+    "(vertigo) Paroymsal  Positional Vertigo": 0,
+    "AIDS": 1,
+    "Acne": 2,
+    "Alcoholic hepatitis": 3,
+    "Allergy": 4,
+    "Arthritis": 5,
+    "Bronchial Asthma": 6,
+    "Cervical spondylosis": 7,
+    "Chicken pox": 8,
+    "Chikungunya": 9,
+    "Chronic cholestasis": 10,
+    "Common Cold": 11,
+    "Dengue": 12,
+    "Diabetes": 13,
+    "Dimorphic hemmorhoids(piles)": 14,
+    "Drug Reaction": 15,
+    "Fungal infection": 16,
+    "GERD": 17,
+    "Gastroenteritis": 18,
+    "Heart attack": 19,
+    "Hepatitis B": 20,
+    "Hepatitis C": 21,
+    "Hepatitis D": 22,
+    "Hepatitis E": 23,
+    "Hypertension": 24,
+    "Hyperthyroidism": 25,
+    "Hypoglycemia": 26,
+    "Hypothyroidism": 27,
+    "Impetigo": 28,
+    "Jaundice": 29,
+    "Malaria": 30,
+    "Migraine": 31,
+    "Osteoarthristis": 32,
+    "Paralysis (brain hemorrhage)": 33,
+    "Peptic ulcer diseae": 34,
+    "Pneumonia": 35,
+    "Psoriasis": 36,
+    "Tuberculosis": 37,
+    "Typhoid": 38,
+    "Urinary tract infection": 39,
+    "Varicose veins": 40,
+    "hepatitis A": 41
+}
+
+NUM_DISEASES = len(DISEASE_INDEX)

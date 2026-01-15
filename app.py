@@ -1,0 +1,1 @@
+# Main entry point for Symptomate application (API / UI hook)
