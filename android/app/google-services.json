@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "739876569628",
+    "project_id": "clinixai-b981d",
+    "storage_bucket": "clinixai-b981d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739876569628:android:08a4305250c97f46bd55d9",
+        "android_client_info": {
+          "package_name": "com.clinixai.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "739876569628-pdv59qath4q8tpv6sl1d4a1crruuimvf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5z7kEsAC2dwn8wVPlZxYHIx1qaq522vY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "739876569628-pdv59qath4q8tpv6sl1d4a1crruuimvf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "739876569628-9i6v6u6ucm174t3d45dqo8md6fg7f8ui.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.clinixai.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739876569628:android:46bb4d87c76fb88ebd55d9",
+        "android_client_info": {
+          "package_name": "com.example.clinixai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "739876569628-pdv59qath4q8tpv6sl1d4a1crruuimvf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5z7kEsAC2dwn8wVPlZxYHIx1qaq522vY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "739876569628-pdv59qath4q8tpv6sl1d4a1crruuimvf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "739876569628-9i6v6u6ucm174t3d45dqo8md6fg7f8ui.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.clinixai.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

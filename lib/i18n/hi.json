@@ -1,0 +1,20 @@
+{
+  "appTitle": "क्लिनिक्सएआई",
+  "splashMessage": "क्लिनिक्सएआई",
+  "chooseLanguage": "भाषा चुनें",
+  "languageTitle": "भाषा चुनें",
+  "languageSubtitle": "अपनी पसंदीदा भाषा चुनें",
+  "continue": "जारी रखें",
+  "continueGuest": "मेहमान",
+  "continueWithoutLogin": "बिना लॉगिन जारी रखें",
+  "orContinue": "या जारी रखें",
+  "welcome": "स्वागत है",
+  "enterPhone": "अपना फोन नंबर दर्ज करें",
+  "phoneNumber": "फोन नंबर",
+  "sendOtp": "OTP भेजें",
+  "enterOtpTitle": "OTP दर्ज करें",
+  "otpLabel": "OTP",
+  "verify": "सत्यापित करें",
+  "demoHint": "डेमो के लिए 123456 दर्ज करें (नया उपयोगकर्ता)",
+  "startCheckup": "चेकअप शुरू करें"
+}
