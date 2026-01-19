@@ -39,3 +39,9 @@ def get_top_k(confidence: dict, k: int = 3):
         key=lambda x: x[1],
         reverse=True
     )[:k]
+
+
+def smooth(conf):
+    eps = 1e-6
+    total = sum(conf.values()) + eps
+    return {k: max(v, 0.01) / total for k, v in conf.items()}

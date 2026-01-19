@@ -1,81 +1,79 @@
 import sys
-import os
+from pathlib import Path
 import pandas as pd
-from collections import defaultdict
 import numpy as np
 import joblib
+from sklearn.metrics import confusion_matrix
 
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.insert(0, PROJECT_ROOT)
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
-from controller.confidence import normalize_confidence, get_top_k
 from scorer.predict import predict_proba
+from controller.confidence import normalize_confidence
 
-TEST_CSV = "data/output/test.csv"
+DATA_PATH = "data/training.csv"  # change to training.csv if needed
 LABEL_COL = "prognosis"
-TOP_K = 3
-CONF_THRESHOLD = 0.75
-
-ARTIFACT_PATH = "scorer/artifacts/disease_model.pkl"
+CONF_THRESHOLD = 0.40   # demo-tuned
 
 
-def evaluate():
-    df = pd.read_csv(TEST_CSV)
+def main():
+    df = pd.read_csv(DATA_PATH)
 
-    artifacts = joblib.load(ARTIFACT_PATH)
-    n_features = artifacts["n_features"]  # 🔒 SINGLE SOURCE OF TRUTH
+    artifacts = joblib.load("scorer/artifacts/disease_model.pkl")
+    feature_order = artifacts["feature_order"]
+    diseases = artifacts["diseases"]
 
-    # 🔒 USE ONLY THE FIRST n_features (exact training space)
-    feature_cols = [
-        c for c in df.columns
-        if c != LABEL_COL
-    ][:n_features]
-
-    total = len(df)
-    top1_correct = 0
-    top3_correct = 0
+    y_true = []
+    y_pred = []
     abstained = 0
-
-    confidence_buckets = defaultdict(lambda: {"correct": 0, "total": 0})
 
     for _, row in df.iterrows():
         true_label = row[LABEL_COL]
+        y_true.append(true_label)
 
-        X = row[feature_cols].astype(float).values.tolist()
+        X = [row.get(f, 0) for f in feature_order]
 
-        raw_scores = predict_proba(X)
-        confidence = normalize_confidence(raw_scores)
+        raw = predict_proba(X)
+        conf = normalize_confidence(raw)
 
-        topk = get_top_k(confidence, k=TOP_K)
-        top1_label, top1_conf = topk[0]
-        topk_labels = [d for d, _ in topk]
+        topk = sorted(conf.items(), key=lambda x: x[1], reverse=True)
+        top1, top1_conf = topk[0]
 
         if top1_conf < CONF_THRESHOLD:
             abstained += 1
+            y_pred.append("ABSTAIN")
+        else:
+            y_pred.append(top1)
 
-        if top1_label == true_label:
-            top1_correct += 1
+    total = len(y_true)
 
-        if true_label in topk_labels:
-            top3_correct += 1
+    # accuracy only on non-abstained
+    filtered = [(t, p) for t, p in zip(y_true, y_pred) if p != "ABSTAIN"]
+    correct = sum(t == p for t, p in filtered)
+    evaluated = len(filtered)
 
-        bucket = round(top1_conf, 1)
-        confidence_buckets[bucket]["total"] += 1
-        if top1_label == true_label:
-            confidence_buckets[bucket]["correct"] += 1
+    top1_acc = correct / max(evaluated, 1)
+    abstain_rate = abstained / total
 
-    print("\n=== Evaluation Results ===")
+    print("\n=== Phase B Evaluation ===")
     print(f"Total samples: {total}")
-    print(f"Top-1 Accuracy: {top1_correct / total:.3f}")
-    print(f"Top-3 Accuracy: {top3_correct / total:.3f}")
-    print(f"Abstention Rate: {abstained / total:.3f}")
+    print(f"Evaluated (non-abstained): {evaluated}")
+    print(f"Top-1 Accuracy (non-abstained): {top1_acc:.3f}")
+    print(f"Abstention Rate: {abstain_rate:.3f}")
 
-    print("\nConfidence vs Accuracy:")
-    for b in sorted(confidence_buckets):
-        stats = confidence_buckets[b]
-        acc = stats["correct"] / max(stats["total"], 1)
-        print(f"  {b:.1f} → {acc:.3f} ({stats['total']} samples)")
+    # confusion matrix (non-abstained only)
+    if evaluated > 0:
+        labels = sorted(set(y_true))
+        cm = confusion_matrix(
+            [t for t, p in filtered],
+            [p for t, p in filtered],
+            labels=labels
+        )
+
+        print("\nConfusion Matrix (rows=true, cols=pred):")
+        print("Labels:", labels)
+        print(cm)
 
 
 if __name__ == "__main__":
-    evaluate()
+    main()
