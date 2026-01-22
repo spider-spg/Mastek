@@ -1,0 +1,309 @@
+{
+  "diseases": {
+    "Pneumothorax spontané": {
+      "medical_name": "Spontaneous pneumothorax",
+      "simple_name": "Collapsed lung",
+      "icd10": "J93"
+    },
+    "Céphalée en grappe": {
+      "medical_name": "Cluster headache",
+      "simple_name": "Severe headache",
+      "icd10": "g44.009"
+    },
+    "Syndrome de Boerhaave": {
+      "medical_name": "Boerhaave",
+      "simple_name": "Boerhaave",
+      "icd10": "K22.3"
+    },
+    "Fracture de côte spontanée": {
+      "medical_name": "Spontaneous rib fracture",
+      "simple_name": "Spontaneous rib fracture",
+      "icd10": "S22.9"
+    },
+    "RGO": {
+      "medical_name": "GERD",
+      "simple_name": "GERD",
+      "icd10": "K21"
+    },
+    "VIH (Primo-infection)": {
+      "medical_name": "HIV (initial infection)",
+      "simple_name": "HIV (initial infection)",
+      "icd10": "B20"
+    },
+    "Anémie": {
+      "medical_name": "Anemia",
+      "simple_name": "Low blood count",
+      "icd10": "D64.9"
+    },
+    "Pharyngite virale": {
+      "medical_name": "Viral pharyngitis",
+      "simple_name": "Throat infection",
+      "icd10": "J02.9"
+    },
+    "Hernie inguinale": {
+      "medical_name": "Inguinal hernia",
+      "simple_name": "Hernia",
+      "icd10": "K40"
+    },
+    "Myasthénie grave": {
+      "medical_name": "Myasthenia gravis",
+      "simple_name": "Muscle weakness",
+      "icd10": "G70.0"
+    },
+    "Coqueluche": {
+      "medical_name": "Whooping cough",
+      "simple_name": "Whooping cough",
+      "icd10": "A37"
+    },
+    "Anaphylaxie": {
+      "medical_name": "Anaphylaxis",
+      "simple_name": "Anaphylaxis",
+      "icd10": "T78.0"
+    },
+    "Épiglottite": {
+      "medical_name": "Epiglottitis",
+      "simple_name": "Epiglottitis",
+      "icd10": "J05.1"
+    },
+    "Syndrome de Guillain-Barré": {
+      "medical_name": "Guillain-Barré syndrome",
+      "simple_name": "Nerve problem",
+      "icd10": "G61.0"
+    },
+    "Laryngite aigue": {
+      "medical_name": "Acute laryngitis",
+      "simple_name": "Acute laryngitis",
+      "icd10": "J04.0"
+    },
+    "Laryngo-trachéo-bronchite (Croup)": {
+      "medical_name": "Croup",
+      "simple_name": "Croup",
+      "icd10": "J05.0"
+    },
+    "TSVP": {
+      "medical_name": "PSVT",
+      "simple_name": "PSVT",
+      "icd10": "I47.1"
+    },
+    "Fibrillation auriculaire/Flutter auriculaire": {
+      "medical_name": "Atrial fibrillation",
+      "simple_name": "Atrial fibrillation",
+      "icd10": "I48.91"
+    },
+    "Bronchiectasies": {
+      "medical_name": "Bronchiectasis",
+      "simple_name": "Bronchiectasis",
+      "icd10": "J47"
+    },
+    "Rhinite allergique": {
+      "medical_name": "Allergic sinusitis",
+      "simple_name": "Allergic sinusitis",
+      "icd10": "J30"
+    },
+    "Chagas": {
+      "medical_name": "Chagas",
+      "simple_name": "Chagas",
+      "icd10": "B57"
+    },
+    "Scombroïde": {
+      "medical_name": "Scombroid food poisoning",
+      "simple_name": "Scombroid food poisoning",
+      "icd10": "T61.1"
+    },
+    "Myocardite": {
+      "medical_name": "Myocarditis",
+      "simple_name": "Myocarditis",
+      "icd10": "I51.4"
+    },
+    "Laryngospasme": {
+      "medical_name": "Larygospasm",
+      "simple_name": "Larygospasm",
+      "icd10": "J38.5"
+    },
+    "Réaction dystonique aïgue": {
+      "medical_name": "Acute dystonic reactions",
+      "simple_name": "Acute dystonic reactions",
+      "icd10": "G24.02"
+    },
+    "Oedème localisé ou généralisé sans atteinte pulmonaire associée": {
+      "medical_name": "Localized edema",
+      "simple_name": "Localized edema",
+      "icd10": "R60.0"
+    },
+    "Lupus érythémateux disséminé (LED)": {
+      "medical_name": "SLE",
+      "simple_name": "SLE",
+      "icd10": "M34"
+    },
+    "Tuberculose": {
+      "medical_name": "Tuberculosis",
+      "simple_name": "TB infection",
+      "icd10": "a15"
+    },
+    "Angine instable": {
+      "medical_name": "Unstable angina",
+      "simple_name": "Unstable angina",
+      "icd10": "I20.0"
+    },
+    "Angine stable": {
+      "medical_name": "Stable angina",
+      "simple_name": "Stable angina",
+      "icd10": "I20.9"
+    },
+    "Ebola": {
+      "medical_name": "Ebola",
+      "simple_name": "Ebola",
+      "icd10": "a98.4"
+    },
+    "Otite moyenne aigue (OMA)": {
+      "medical_name": "Acute otitis media",
+      "simple_name": "Acute otitis media",
+      "icd10": "H66.90"
+    },
+    "Attaque de panique": {
+      "medical_name": "Panic attack",
+      "simple_name": "Panic attack",
+      "icd10": "f41"
+    },
+    "Asthme exacerbé ou bronchospasme": {
+      "medical_name": "Bronchospasm / acute asthma exacerbation",
+      "simple_name": "Bronchospasm / acute asthma exacerbation",
+      "icd10": "J45"
+    },
+    "Bronchite": {
+      "medical_name": "Bronchitis",
+      "simple_name": "Bronchitis",
+      "icd10": "j40"
+    },
+    "Exacerbation aigue de MPOC et/ou surinfection associée": {
+      "medical_name": "Acute COPD exacerbation / infection",
+      "simple_name": "Acute COPD exacerbation / infection",
+      "icd10": "j44.1"
+    },
+    "Embolie pulmonaire": {
+      "medical_name": "Pulmonary embolism",
+      "simple_name": "Pulmonary embolism",
+      "icd10": "i26"
+    },
+    "IVRS ou virémie": {
+      "medical_name": "URTI",
+      "simple_name": "URTI",
+      "icd10": "j06.9"
+    },
+    "Possible influenza ou syndrome virémique typique": {
+      "medical_name": "Influenza",
+      "simple_name": "Influenza",
+      "icd10": "j11.1"
+    },
+    "Pneumonie": {
+      "medical_name": "Pneumonia",
+      "simple_name": "Pneumonia",
+      "icd10": "j17, j18"
+    },
+    "Rhinosinusite aigue": {
+      "medical_name": "Acute rhinosinusitis",
+      "simple_name": "Acute rhinosinusitis",
+      "icd10": "j01"
+    },
+    "Rhinosinusite chronique": {
+      "medical_name": "Chronic rhinosinusitis",
+      "simple_name": "Chronic rhinosinusitis",
+      "icd10": "j32"
+    },
+    "Bronchiolite": {
+      "medical_name": "Bronchiolitis",
+      "simple_name": "Bronchiolitis",
+      "icd10": "j21"
+    },
+    "néoplasie pulmonaire": {
+      "medical_name": "Pulmonary neoplasm",
+      "simple_name": "Pulmonary neoplasm",
+      "icd10": "c34"
+    },
+    "Possible NSTEMI / STEMI": {
+      "medical_name": "Possible NSTEMI / STEMI",
+      "simple_name": "Possible NSTEMI / STEMI",
+      "icd10": "I21"
+    },
+    "Sarcoïdose": {
+      "medical_name": "Sarcoidosis",
+      "simple_name": "Sarcoidosis",
+      "icd10": "d86"
+    },
+    "Néoplasie du pancréas": {
+      "medical_name": "Pancreatic neoplasm",
+      "simple_name": "Pancreatic neoplasm",
+      "icd10": "c25"
+    },
+    "OAP/Surcharge pulmonaire": {
+      "medical_name": "Acute pulmonary edema",
+      "simple_name": "Acute pulmonary edema",
+      "icd10": "J81.0"
+    },
+    "Péricardite": {
+      "medical_name": "Pericarditis",
+      "simple_name": "Pericarditis",
+      "icd10": "I30"
+    }
+  },
+  "questions": {
+    "fievre": {
+      "question": "Do you feel hot or have fever?",
+      "hindi_hint": "(बुखार है?)",
+      "importance": "high",
+      "original_question": "Do you have a fever (either felt or measured with a thermometer)?"
+    },
+    "toux": {
+      "question": "Do you have cough?",
+      "hindi_hint": "(खांसी है?)",
+      "importance": "high",
+      "original_question": "Do you have a cough?"
+    },
+    "dyspn": {
+      "question": "Do you have difficulty breathing?",
+      "hindi_hint": "(सांस लेने में तकलीफ?)",
+      "importance": "high",
+      "original_question": "Are you experiencing shortness of breath?"
+    },
+    "douleur_tete": {
+      "question": "Do you have headache?",
+      "hindi_hint": "(सिर दर्द है?)",
+      "importance": "high",
+      "original_question": "Do you have a headache?"
+    },
+    "nausee": {
+      "question": "Do you feel like vomiting?",
+      "hindi_hint": "(उल्टी जैसा लगता है?)",
+      "importance": "medium",
+      "original_question": "Do you feel nauseous?"
+    },
+    "fatigue": {
+      "question": "Do you feel very tired or weak?",
+      "hindi_hint": "(बहुत थकान या कमजोरी?)",
+      "importance": "medium",
+      "original_question": "Do you feel fatigue?"
+    },
+    "douleurxx_ventre": {
+      "question": "Do you have stomach pain?",
+      "hindi_hint": "(पेट में दर्द?)",
+      "importance": "high",
+      "original_question": "Do you have abdominal pain?"
+    },
+    "vertiges": {
+      "question": "Do you feel dizzy or unsteady?",
+      "hindi_hint": "(चक्कर आना?)",
+      "importance": "medium",
+      "original_question": "Do you have dizziness?"
+    }
+  },
+  "metadata": {
+    "target_region": "Rural India",
+    "languages": [
+      "English",
+      "Hindi hints"
+    ],
+    "total_diseases": 49,
+    "core_questions": 8,
+    "cultural_adaptation": true
+  }
+}
