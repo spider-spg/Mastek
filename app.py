@@ -823,19 +823,21 @@ class IndiaRuralDiagnosticSystem:
         risk_factors = []
         confidence_boosters = []
         
-        # Factor 1: Model confidence
+        # Factor 1: Model confidence (including SNOMED medical confidence)
         confidence = predictions[0].get('confidence', 0)
         if confidence < 0.3:
-            trust_score -= 35
-            risk_factors.append("Very low model confidence")
+            trust_score -= 40  # Very low medical confidence
+            risk_factors.append("Very low medical diagnosis confidence")
         elif confidence < 0.5:
-            trust_score -= 25
-            risk_factors.append("Low model confidence") 
+            trust_score -= 30  # Low medical confidence
+            risk_factors.append("Low medical diagnosis confidence") 
         elif confidence < 0.7:
-            trust_score -= 10
-            risk_factors.append("Moderate model confidence")
+            trust_score -= 15  # Moderate medical confidence
+            risk_factors.append("Moderate medical diagnosis confidence")
+        elif confidence >= 0.8:
+            confidence_boosters.append("High medical diagnosis confidence")
         else:
-            confidence_boosters.append("High model confidence")
+            confidence_boosters.append("Good medical diagnosis confidence")
         
         # Factor 2: Symptom matching rate  
         total_positive_symptoms = len([v for v in self.user_responses.values() if v > 0])
@@ -852,8 +854,16 @@ class IndiaRuralDiagnosticSystem:
         
         # Factor 3: Clinical override vs ML disagreement
         if self.used_clinical_override:
-            trust_score += 10  # Clinical reasoning is more trusted
-            confidence_boosters.append("Clinical medical knowledge used")
+            # Only boost trust if SNOMED confidence is reasonable
+            if confidence >= 0.6:
+                trust_score += 10  # Clinical reasoning is more trusted when confident
+                confidence_boosters.append("Clinical medical knowledge used with good confidence")
+            elif confidence >= 0.4:
+                trust_score += 5   # Moderate boost for moderate confidence
+                confidence_boosters.append("Clinical medical knowledge used")
+            else:
+                # Don't boost trust for low-confidence clinical diagnoses
+                confidence_boosters.append("Clinical medical knowledge used (low confidence)")
         
         # Factor 4: Uncertain responses
         if hasattr(self, 'uncertain_responses') and len(self.uncertain_responses) > 3:
@@ -884,8 +894,16 @@ class IndiaRuralDiagnosticSystem:
         elif self.questions_asked >= 12:
             confidence_boosters.append("Comprehensive symptom assessment")
         
-        # Set risk level
+        # Set risk level with medical confidence consideration
         final_score = max(0, min(100, trust_score))
+        
+        # Cap trust score based on medical diagnosis confidence to prevent misleading high trust
+        medical_confidence = predictions[0].get('confidence', 0)
+        if medical_confidence < 0.4:
+            final_score = min(final_score, 60)  # Cap at 60 for low medical confidence
+        elif medical_confidence < 0.6:
+            final_score = min(final_score, 80)  # Cap at 80 for moderate medical confidence
+        
         if final_score >= 85:
             risk_level = "LOW RISK - High confidence prediction"
         elif final_score >= 65: 
