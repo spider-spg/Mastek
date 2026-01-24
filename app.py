@@ -192,14 +192,6 @@ class IndiaRuralDiagnosticSystem:
     
     def start_rural_diagnosis(self, show_detailed_reasoning=False):
         """Start diagnosis optimized for rural India"""
-        print("\n" + "="*60)
-        print("🇮🇳 RURAL INDIA MEDICAL ASSISTANCE SYSTEM")
-        print("="*60)
-        print("🏥 Machine learning medical assistance for rural healthcare")
-        print("📱 Simple questions in English")
-        print("⚡ Based on medical ML model (99.3% training accuracy)")
-        print("-"*60)
-        
         # Set detailed reasoning flag
         self.show_detailed_reasoning_flag = show_detailed_reasoning
         
