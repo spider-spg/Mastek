@@ -1,1 +1,0 @@
-# Question to symptom key and weight mapping rules

@@ -1,1 +1,0 @@
-# Body part definitions for symptom categorization

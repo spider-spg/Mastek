@@ -33,6 +33,12 @@ SYMPTOM_TO_FEATURE_MAP = {
     "sinus_pressure_present": "sinus_pressure",
     "ear_pain_present": "ear_pain",  # Need to check if this exists
     
+    # Neurological/Head symptoms  
+    "headache_present": "headache",
+    "dizziness_present": "dizziness", 
+    "vision_problems": "altered_sensorium",  # Closest available
+    "light_sound_sensitivity": "irritability",  # Closest available
+    
     # Missing chest symptom mappings
     "cough_duration": "cough",  # Duration maps to general cough feature
     "smoking_frequency": "smoking",  # Maps to smoking feature if it exists
@@ -60,6 +66,12 @@ SYMPTOM_TO_FEATURE_MAP = {
     "bladder_pain_present": "bladder_discomfort",
     "burning_urination_persistent": "burning_micturition",
     "frequent_urination_persistent": "continuous_feel_of_urine",
+    # Additional urinary mappings for new questions
+    "painful_urination": "burning_micturition",
+    "frequent_urination": "continuous_feel_of_urine", 
+    "blood_in_urine": "blood_in_sputum",  # Closest available
+    "lower_abdominal_pain": "abdominal_pain",
+    "incomplete_emptying": "continuous_feel_of_urine",
 }
 
 def map_symptoms_to_features(symptoms_dict):
