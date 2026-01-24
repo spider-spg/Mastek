@@ -35,8 +35,6 @@ class IndiaRuralDiagnosticSystem:
             with open("ddxplus_features.pkl", "rb") as f:
                 self.feature_names = pickle.load(f)
             
-            print("✅ Medical ML model loaded")
-            
         except FileNotFoundError:
             print("❌ Please run ddxplus_integrator.py first!")
             sys.exit(1)
@@ -191,12 +189,6 @@ class IndiaRuralDiagnosticSystem:
             "Syndrome de Guillain-Barré": "Nerve problem",
             "Laryngospasme": "Throat tightness"
         }
-        
-        print("\n✅ Simple English questions ready")
-        print(f"   🚨 Emergency questions: {sum(len(eq) for eq in self.emergency_by_system.values())} (targeted by body system)")
-        print(f"   📋 Core questions: {len(self.core_questions)}")
-        print(f"   🎯 Body systems: {len(self.body_system_questions)}")
-        print(f"   🔎 Total question pool: {sum(len(eq) for eq in self.emergency_by_system.values()) + sum(len(qs) for qs in self.body_system_questions.values()) + len(self.core_questions)}")
     
     def start_rural_diagnosis(self, show_detailed_reasoning=False):
         """Start diagnosis optimized for rural India"""
@@ -502,8 +494,7 @@ class IndiaRuralDiagnosticSystem:
     
     def _get_ai_diagnosis(self):
         """Get diagnosis from AI model"""
-        print("\n� ML MODEL ANALYSIS...")
-        print("Note: This is a prediction tool, not a replacement for medical diagnosis")
+        # Analysis running silently for clean user interface
         
         # Create feature vector
         feature_vector = np.zeros(len(self.feature_names))
@@ -529,9 +520,7 @@ class IndiaRuralDiagnosticSystem:
                 unmatched_symptoms.append(evidence)
         
         total_positive_symptoms = len([v for v in self.user_responses.values() if v > 0])
-        print(f"   📝 Matched symptoms: {matched_features}/{total_positive_symptoms}")
-        if unmatched_symptoms:
-            print(f"   ⚠️ Unmatched symptoms: {', '.join(unmatched_symptoms)}")
+        # Debug info removed for clean user interface
         
         # Show uncertain responses for manual review
         if hasattr(self, 'uncertain_responses') and self.uncertain_responses:
@@ -697,7 +686,7 @@ class IndiaRuralDiagnosticSystem:
     
     def _get_basic_diagnosis(self):
         """SNOMED-based medical diagnosis using real medical knowledge"""
-        print("   🏥 Using SNOMED CT medical analysis...")
+        # Using SNOMED CT medical analysis (running silently)
         
         # Set matched_features for trust scoring (when using clinical override)
         total_positive_symptoms = len([v for v in self.user_responses.values() if v > 0])
@@ -1094,12 +1083,7 @@ class IndiaRuralDiagnosticSystem:
         print(f"\n🚨 RURAL HEALTHCARE GUIDANCE:")
         self._provide_rural_guidance(predictions)
         
-        # System info for healthcare workers
-        print(f"\n📊 SYSTEM INFO:")
-        print(f"   Questions asked: {self.questions_asked}")
-        print(f"   Prediction: DDXPlus ML Model + SNOMED CT medical knowledge (NO GenAI)")
-        print(f"   Training accuracy: 99.3% (on DDXPlus dataset)")
-        print(f"   Optimized for: Rural Indian healthcare workers")
+        # Important disclaimers for medical use
         print(f"\n⚠️ IMPORTANT DISCLAIMERS:")
         print(f"   • This is a medical assistance tool, NOT a doctor")
         print(f"   • Always consult qualified medical professional for diagnosis")

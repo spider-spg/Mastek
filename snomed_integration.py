@@ -126,10 +126,6 @@ class SnomedIntegration:
             "respiratory": ["toux", "breathing_difficulty", "chest_pain", "throat_pain", "nose_congestion"],
             "general": ["fievre", "fatigue"]
         }
-        
-        print("✅ SNOMED CT medical knowledge loaded")
-        print(f"   📚 Medical concepts: {len(self.concepts)}")
-        print(f"   🏥 Body systems: {len(self.body_systems)}")
     
     def analyze_symptoms(self, symptoms_dict):
         """Analyze symptoms using SNOMED medical knowledge"""
