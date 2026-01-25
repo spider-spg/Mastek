@@ -1,0 +1,15 @@
+# FastAPI Backend Requirements for Symptomate
+fastapi>=0.104.0
+uvicorn>=0.24.0
+pydantic>=2.4.0
+python-dotenv>=1.0.0
+google-generativeai>=0.3.0
+python-multipart>=0.0.6
+httpx>=0.25.0
+
+# For CORS and security
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+
+# Optional: For production deployment
+gunicorn>=21.2.0

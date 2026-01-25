@@ -1,0 +1,20 @@
+{
+  "model_info": {
+    "filename": "hybrid_diagnostic_model.tflite",
+    "type": "hybrid_ddxplus_snomed",
+    "capabilities": [
+      "Disease prediction (49 DDXPlus diseases)",
+      "Diagnostic confidence scoring",
+      "Enhanced medical knowledge integration"
+    ]
+  },
+  "usage": {
+    "dart_implementation": "\n// Enhanced Flutter implementation\nclass HybridDiagnosticService {\n  static late Interpreter _interpreter;\n  \n  static Future<DiagnosticResult> predict(Map<String, bool> symptoms) async {\n    // Prepare input\n    var input = Float32List(223);\n    // Map symptoms to features...\n    \n    // Run inference  \n    var diseaseOutput = List<List<double>>.filled(1, List<double>.filled(49, 0.0));\n    var confidenceOutput = List<List<double>>.filled(1, List<double>.filled(1, 0.0));\n    \n    _interpreter.run([input], {\n      0: diseaseOutput,    // disease predictions\n      1: confidenceOutput  // confidence score\n    });\n    \n    return DiagnosticResult(\n      diseases: diseaseOutput[0],\n      confidence: confidenceOutput[0][0],\n      enhancedAnalysis: true\n    );\n  }\n}\n",
+    "integration_benefits": [
+      "Multi-output predictions",
+      "Built-in confidence scoring",
+      "Enhanced medical accuracy",
+      "Optimized mobile performance"
+    ]
+  }
+}

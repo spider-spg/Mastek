@@ -1,0 +1,83 @@
+{
+  "version": "2.0",
+  "type": "hybrid_predictions",
+  "ddxplus_diseases": {
+    "names": [
+      "Pneumothorax spontan\u00e9",
+      "C\u00e9phal\u00e9e en grappe",
+      "Syndrome de Boerhaave",
+      "Fracture de c\u00f4te spontan\u00e9e",
+      "RGO",
+      "VIH (Primo-infection)",
+      "An\u00e9mie",
+      "Pharyngite virale",
+      "Hernie inguinale",
+      "Myasth\u00e9nie grave",
+      "Coqueluche",
+      "Anaphylaxie",
+      "\u00c9piglottite",
+      "Syndrome de Guillain-Barr\u00e9",
+      "Laryngite aigue",
+      "Laryngo-trach\u00e9o-bronchite (Croup)",
+      "TSVP",
+      "Fibrillation auriculaire/Flutter auriculaire",
+      "Bronchiectasies",
+      "Rhinite allergique",
+      "Chagas",
+      "Scombro\u00efde",
+      "Myocardite",
+      "Laryngospasme",
+      "R\u00e9action dystonique a\u00efgue",
+      "Oed\u00e8me localis\u00e9 ou g\u00e9n\u00e9ralis\u00e9 sans atteinte pulmonaire associ\u00e9e",
+      "Lupus \u00e9ryth\u00e9mateux diss\u00e9min\u00e9 (LED)",
+      "Tuberculose",
+      "Angine instable",
+      "Angine stable",
+      "Ebola",
+      "Otite moyenne aigue (OMA)",
+      "Attaque de panique",
+      "Asthme exacerb\u00e9 ou bronchospasme",
+      "Bronchite",
+      "Exacerbation aigue de MPOC et/ou surinfection associ\u00e9e",
+      "Embolie pulmonaire",
+      "IVRS ou vir\u00e9mie",
+      "Possible influenza ou syndrome vir\u00e9mique typique",
+      "Pneumonie",
+      "Rhinosinusite aigue",
+      "Rhinosinusite chronique",
+      "Bronchiolite",
+      "n\u00e9oplasie pulmonaire",
+      "Possible NSTEMI / STEMI",
+      "Sarco\u00efdose",
+      "N\u00e9oplasie du pancr\u00e9as",
+      "OAP/Surcharge pulmonaire",
+      "P\u00e9ricardite"
+    ],
+    "count": 49,
+    "language": "french_medical_terms"
+  },
+  "model_outputs": {
+    "disease_predictions": {
+      "shape": [
+        1,
+        49
+      ],
+      "type": "float32",
+      "description": "Probability distribution over DDXPlus diseases"
+    },
+    "confidence_score": {
+      "shape": [
+        1,
+        1
+      ],
+      "type": "float32",
+      "description": "Overall diagnostic confidence (0.0 to 1.0)"
+    }
+  },
+  "enhanced_features": [
+    "Multi-output predictions",
+    "Confidence scoring",
+    "SNOMED CT medical knowledge",
+    "Optimized for mobile inference"
+  ]
+}
