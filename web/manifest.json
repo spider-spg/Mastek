@@ -1,6 +1,6 @@
 {
-    "name": "clinixai",
-    "short_name": "clinixai",
+    "name": "symptom_checker",
+    "short_name": "symptom_checker",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
