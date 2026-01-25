@@ -55,49 +55,96 @@ class IndiaRuralDiagnosticSystem:
             "seizures": "convulsions",
             "severe_confusion": "confusion",
             
-            # Core symptoms
+            # Core symptoms (French mapping)
+            "fievre": "fievre",  # Fever
+            "fatigue": "fatig_ext",  # Fatigue
             "fever": "fievre",
-            "fatigue": "fatig_ext",
+            "tired": "fatig_ext",
             
-            # Chest symptoms
+            # Respiratory symptoms
+            "toux": "toux",  # Cough
+            "dyspn": "dyspn",  # Breathing difficulty
             "cough": "toux",
-            "breathing_difficulty": "dysp_effort",
+            "breathing_difficulty": "dyspn",
             "chest_pain": "douleurxx",
+            "wheeze": "wheez",
             "wheezing": "wheez",
+            "throat_pain": "douleurxx",
             
-            # Head symptoms  
+            # Neurological symptoms
+            "douleur_tete": "douleurxx",  # Headache
+            "vertiges": "vertiges",  # Dizziness  
             "headache": "douleurxx",
             "dizziness": "vertiges",
             "vision_problems": "baisse_vision",
             "neck_stiffness": "raideur_nuque",
+            "severe_confusion": "confusion",
+            "memory_problems": "confusion",
             
-            # Stomach symptoms
+            # Gastrointestinal symptoms
             "stomach_pain": "douleurxx",
             "nausea": "nausee", 
-            "vomiting": "nausee",  # Map both nausea and vomiting to nausee
+            "vomiting": "nausee",
             "diarrhea": "diarrhee",
-            "heartburn": "douleurxx",  # General pain for heartburn
+            "diarrhee": "diarrhee",  # Direct French mapping
+            "heartburn": "pyrosis",
+            "constipation": "constip",
+            "abdominal_pain": "douleurxx",
+            "appetite_loss": "anorexie",
+            "weight_loss": "amaigris",
+            "blood_vomit": "hemateme",
+            "black_stool": "melena",
             
             # Urinary symptoms
-            "urination_pain": "dysurie",
-            "frequent_urination": "pollakiurie",
+            "burning_urination": "dysurie",
+            "frequent_urination": "pollakiurie", 
             "blood_in_urine": "hematurie",
-            
-            # ENT symptoms
-            "throat_pain": "douleurxx",
-            "ear_pain": "douleurxx",
-            "nose_congestion": "rhinorrhee",
-            "hearing_problems": "baisse_audition",
+            "kidney_pain": "douleurxx",
+            "urination_problems": "dysurie",
+            "painful_urination": "dysurie",
             
             # Skin symptoms
             "rash": "lesions_peau",
             "itching": "prurit_occ",
-            "skin_wounds": "lesions_peau_elevee",
+            "skin_lesions": "lesions_peau_elevee",
             "skin_color_change": "lesions_peau_couleur",
+            "skin_wounds": "lesions_peau",
+            "sweating": "hypersueur",
+            "night_sweats": "sueur_nuit",
+            "pale_skin": "pallor",
+            
+            # ENT symptoms
+            "ear_pain": "douleurxx",
+            "hearing_problems": "baisse_audition", 
+            "nasal_congestion": "rhinorrhee",
+            "runny_nose": "rhinorrhee",
+            "voice_problems": "voix_enrouee",
+            "difficulty_swallowing": "dysphagie",
+            "sore_throat": "douleurxx",
+            
+            # Musculoskeletal symptoms
+            "joint_pain": "arthralgie",
+            "muscle_pain": "myalgie", 
+            "back_pain": "douleurxx",
+            "leg_pain": "douleurxx",
+            "arm_pain": "douleurxx",
+            "stiff_joints": "arthralgie",
+            
+            # Cardiovascular symptoms
+            "palpitations": "palpitat", 
+            "irregular_heartbeat": "palpitat",
+            "swollen_legs": "oedeme_jambe",
+            "leg_swelling": "oedeme_jambe",
+            "chest_tightness": "douleurxx",
             
             # General symptoms
-            "weight_loss": "amaigris",
-            "appetite_loss": "anorexie",
+            "weakness": "fatig_ext",
+            "cold_symptoms": "rhinorrhee",
+            "flu_symptoms": "fievre",
+            "body_aches": "myalgie",
+            "chills": "frisson",
+            "hot_flashes": "sueur_nuit",
+            "mood_changes": "depression",
             "night_sweats": "sueurs_noc"
         }
         
@@ -128,31 +175,44 @@ class IndiaRuralDiagnosticSystem:
             "fatigue": {"question": "Do you feel very tired or weak?", "importance": "medium"}
         }
         
-        # Body system specific questions
+        # Body system specific questions (significantly expanded)
         self.body_system_questions = {
             "chest": {
                 "toux": {"question": "Do you have cough?", "importance": "high"},
                 "dyspn": {"question": "Do you have difficulty breathing?", "importance": "high"},
                 "chest_pain": {"question": "Do you have chest pain?", "importance": "high"},
-                "wheeze": {"question": "Do you have wheezing sound when breathing?", "importance": "medium"}
+                "wheeze": {"question": "Do you have wheezing sound when breathing?", "importance": "medium"},
+                "chest_tightness": {"question": "Does your chest feel tight?", "importance": "medium"},
+                "palpitations": {"question": "Do you feel your heart beating fast or irregularly?", "importance": "high"},
+                "swollen_legs": {"question": "Are your legs or feet swollen?", "importance": "medium"},
+                "throat_pain": {"question": "Do you have sore throat?", "importance": "medium"}
             },
             "head": {
                 "douleur_tete": {"question": "Do you have headache?", "importance": "high"},
                 "vertiges": {"question": "Do you feel dizzy or unsteady?", "importance": "medium"},
                 "vision_problems": {"question": "Do you have vision problems?", "importance": "medium"},
-                "neck_stiff": {"question": "Do you have neck stiffness?", "importance": "medium"}
+                "neck_stiff": {"question": "Do you have neck stiffness?", "importance": "medium"},
+                "memory_problems": {"question": "Do you have memory problems or confusion?", "importance": "medium"},
+                "mood_changes": {"question": "Have you noticed mood changes or feeling depressed?", "importance": "low"}
             },
             "stomach": {
                 "stomach_pain": {"question": "Do you have stomach pain?", "importance": "high"},
                 "nausea": {"question": "Do you feel like vomiting?", "importance": "high"},
+                "vomiting": {"question": "Have you been vomiting?", "importance": "high"},
                 "diarrhea": {"question": "Do you have loose motions/diarrhea?", "importance": "medium"},
-                "heartburn": {"question": "Do you have burning sensation in chest after eating?", "importance": "medium"}
+                "constipation": {"question": "Do you have difficulty passing stool/constipation?", "importance": "medium"},
+                "heartburn": {"question": "Do you have burning sensation in chest after eating?", "importance": "medium"},
+                "appetite_loss": {"question": "Have you lost your appetite?", "importance": "medium"},
+                "weight_loss": {"question": "Have you lost weight recently without trying?", "importance": "medium"},
+                "blood_vomit": {"question": "Have you vomited blood?", "importance": "emergency"},
+                "black_stool": {"question": "Have you passed black or tar-like stool?", "importance": "high"}
             },
             "urinary": {
                 "burning_urination": {"question": "Do you feel burning while passing urine?", "importance": "high"},
                 "frequent_urination": {"question": "Do you need to pass urine very often?", "importance": "high"},
                 "blood_urine": {"question": "Do you see blood in urine?", "importance": "high"},
-                "kidney_pain": {"question": "Do you have pain in lower back/side?", "importance": "medium"}
+                "kidney_pain": {"question": "Do you have pain in lower back/side?", "importance": "medium"},
+                "urination_problems": {"question": "Do you have difficulty starting or stopping urination?", "importance": "medium"}
             },
             "ent": {
                 "sore_throat": {"question": "Do you have sore throat or throat pain?", "importance": "high"},
@@ -167,13 +227,21 @@ class IndiaRuralDiagnosticSystem:
                 "rash": {"question": "Do you have skin rash or red patches?", "importance": "high"},
                 "itching": {"question": "Do you have itching on skin?", "importance": "medium"},
                 "skin_lesions": {"question": "Do you have any wounds or sores on skin?", "importance": "medium"},
-                "skin_color_change": {"question": "Has your skin color changed anywhere?", "importance": "medium"}
+                "skin_color_change": {"question": "Has your skin color changed anywhere?", "importance": "medium"},
+                "sweating": {"question": "Are you sweating more than usual?", "importance": "medium"},
+                "pale_skin": {"question": "Does your skin look pale or less colored?", "importance": "medium"}
             },
             "general": {
-                "weight_loss": {"question": "Have you lost weight recently?", "importance": "medium"},
+                "weight_loss": {"question": "Have you lost weight recently without trying?", "importance": "medium"},
                 "night_sweats": {"question": "Do you sweat a lot at night?", "importance": "medium"},
                 "appetite_loss": {"question": "Have you lost your appetite?", "importance": "medium"},
-                "sleep_problems": {"question": "Do you have trouble sleeping?", "importance": "low"}
+                "sleep_problems": {"question": "Do you have trouble sleeping?", "importance": "low"},
+                "weakness": {"question": "Do you feel weak or have no energy?", "importance": "high"},
+                "body_aches": {"question": "Do you have body aches or muscle pain?", "importance": "medium"},
+                "joint_pain": {"question": "Do you have joint pain or stiffness?", "importance": "medium"},
+                "chills": {"question": "Do you have chills or feel cold?", "importance": "medium"},
+                "back_pain": {"question": "Do you have back pain?", "importance": "medium"},
+                "leg_pain": {"question": "Do you have pain in your legs?", "importance": "medium"}
             }
         }
         
