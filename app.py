@@ -22,6 +22,7 @@ class IndiaRuralDiagnosticSystem:
         # Adaptive max questions based on body system
         self.base_max_questions = 15  # Increased from fixed 7
         self.emergency_detected = False
+        self.additional_symptoms = ""  # Store user's additional input
         
         # Initialize SNOMED medical knowledge
         self.snomed = SnomedIntegration()
@@ -247,6 +248,9 @@ class IndiaRuralDiagnosticSystem:
             self._ask_dynamic_questions(targeted_questions, max_questions)
         
         print(f"\n✅ Assessment complete: {self.questions_asked} questions asked")
+        
+        # Ask for any additional symptoms (for user satisfaction - doesn't affect diagnosis)
+        self._ask_additional_symptoms()
     
 
     def _ask_main_complaint_area(self):
@@ -483,6 +487,25 @@ class IndiaRuralDiagnosticSystem:
         
         self.questions_asked += 1
         return response_value
+    
+    def _ask_additional_symptoms(self):
+        """Ask for any additional symptoms the user wants to mention"""
+        print(f"\n💬 ADDITIONAL SYMPTOMS:")
+        print("Is there anything else bothering you that we haven't asked about?")
+        print("(This helps us understand your full condition - just press Enter to skip)")
+        
+        try:
+            additional_input = input("   Other symptoms or concerns: ").strip()
+            if additional_input:
+                # Store for user satisfaction (doesn't affect medical diagnosis)
+                self.additional_symptoms = additional_input
+                print(f"   📝 Noted: {additional_input}")
+            else:
+                self.additional_symptoms = ""
+                print("   ✓ Skipped")
+        except (EOFError, KeyboardInterrupt):
+            self.additional_symptoms = ""
+            print("   ✓ Skipped")
     
     def _get_ai_diagnosis(self):
         """Get diagnosis from AI model"""
@@ -1088,6 +1111,10 @@ class IndiaRuralDiagnosticSystem:
                     conf = pred.get("confidence", 0)
                     print(f"   {i}. {pred['simple_name']} ({pred['medical_name']}) - {conf:.1%}")
 
+        # Show additional symptoms mentioned by user (for completeness)
+        if hasattr(self, 'additional_symptoms') and self.additional_symptoms:
+            print(f"\n💬 ADDITIONAL SYMPTOMS MENTIONED:")
+            print(f"   📝 {self.additional_symptoms}")
         
         # Rural healthcare guidance
         print(f"\n🚨 RURAL HEALTHCARE GUIDANCE:")
