@@ -23,6 +23,9 @@ class IndiaRuralDiagnosticSystem:
         self.base_max_questions = 15  # Increased from fixed 7
         self.emergency_detected = False
         self.additional_symptoms = ""  # Store user's additional input
+        self.used_clinical_override = False  # Track when SNOMED override is used
+        self.matched_features = 0  # Track symptom matching for trust scoring
+        self.uncertain_responses = []  # Track uncertain answers
         
         # Initialize SNOMED medical knowledge
         self.snomed = SnomedIntegration()
