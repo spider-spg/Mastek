@@ -102,11 +102,149 @@ class NHSUKScraper:
 
 
 class DynamicDiseaseDiscovery:
-    """
-    Discovers diseases dynamically from SNOMED + NHS UK
-    No hardcoded disease rules
-    """
-    
+        # User-provided hardcoded diseases, symptoms, and questions
+    HARDCODED_DISEASES = {
+            'head': [
+                {
+                    'snomed_id': 'USER_tension_headache',
+                    'name': 'Tension headache',
+                    'symptoms': [{'source': 'user', 'symptom': 'dull pressure'}, {'source': 'user', 'symptom': 'scalp tightness'}],
+                    'finding_sites': ['head'],
+                    'nhs_url': '',
+                    'overview': '',
+                    'questions': [
+                        {'id': 'q_tension_band', 'text': 'Is the pain like a tight band around your head?', 'options': ['Yes', 'No'], 'type': 'single_choice', 'priority': 5, 'symptom_match': 'dull pressure'}
+                    ]
+                },
+                {
+                    'snomed_id': 'USER_cluster_headache',
+                    'name': 'Cluster headache',
+                    'symptoms': [{'source': 'user', 'symptom': 'severe one-sided pain'}, {'source': 'user', 'symptom': 'tearing eye'}],
+                    'finding_sites': ['head'],
+                    'nhs_url': '',
+                    'overview': '',
+                    'questions': [
+                        {'id': 'q_cluster_severe', 'text': 'Is the headache extremely severe on one side with eye watering?', 'options': ['Yes', 'No'], 'type': 'single_choice', 'priority': 5, 'symptom_match': 'severe one-sided pain'}
+                    ]
+                },
+                {
+                    'snomed_id': 'USER_temporal_arteritis',
+                    'name': 'Temporal arteritis',
+                    'symptoms': [{'source': 'user', 'symptom': 'scalp tenderness'}, {'source': 'user', 'symptom': 'jaw pain'}, {'source': 'user', 'symptom': 'vision issues'}],
+                    'finding_sites': ['head'],
+                    'nhs_url': '',
+                    'overview': '',
+                    'questions': [
+                        {'id': 'q_temporal_jaw', 'text': 'Do you feel jaw pain while chewing or sudden vision problems?', 'options': ['Yes', 'No'], 'type': 'single_choice', 'priority': 5, 'symptom_match': 'jaw pain'}
+                    ]
+                },
+                {
+                    'snomed_id': 'USER_concussion',
+                    'name': 'Concussion',
+                    'symptoms': [{'source': 'user', 'symptom': 'dizziness'}, {'source': 'user', 'symptom': 'confusion after injury'}],
+                    'finding_sites': ['head'],
+                    'nhs_url': '',
+                    'overview': '',
+                    'questions': [
+                        {'id': 'q_concussion_injury', 'text': 'Did symptoms start after a recent head injury or fall?', 'options': ['Yes', 'No'], 'type': 'single_choice', 'priority': 5, 'symptom_match': 'confusion after injury'}
+                    ]
+                }
+            ],
+            'nose': [
+                {
+                    'snomed_id': 'USER_common_cold',
+                    'name': 'Common cold',
+                    'symptoms': [{'source': 'user', 'symptom': 'runny nose'}, {'source': 'user', 'symptom': 'sore throat'}],
+                    'finding_sites': ['nose'],
+                    'nhs_url': '',
+                    'overview': '',
+                    'questions': [
+                        {'id': 'q_cold_fever', 'text': 'Did symptoms begin with mild fever or sore throat?', 'options': ['Yes', 'No'], 'type': 'single_choice', 'priority': 5, 'symptom_match': 'sore throat'}
+                    ]
+                },
+                {
+                    'snomed_id': 'USER_allergic_rhinitis',
+                    'name': 'Allergic rhinitis',
+                    'symptoms': [{'source': 'user', 'symptom': 'sneezing'}, {'source': 'user', 'symptom': 'itching'}, {'source': 'user', 'symptom': 'watery eyes'}],
+                    'finding_sites': ['nose'],
+                    'nhs_url': '',
+                    'overview': '',
+                    'questions': [
+                        {'id': 'q_rhinitis_itch', 'text': 'Do you have itching with frequent sneezing and watery eyes?', 'options': ['Yes', 'No'], 'type': 'single_choice', 'priority': 5, 'symptom_match': 'itching'}
+                    ]
+                },
+                {
+                    'snomed_id': 'USER_nasal_polyp',
+                    'name': 'Nasal polyp',
+                    'symptoms': [{'source': 'user', 'symptom': 'blockage'}, {'source': 'user', 'symptom': 'reduced smell'}],
+                    'finding_sites': ['nose'],
+                    'nhs_url': '',
+                    'overview': '',
+                    'questions': [
+                        {'id': 'q_polyp_smell', 'text': 'Have you noticed a reduced sense of smell?', 'options': ['Yes', 'No'], 'type': 'single_choice', 'priority': 5, 'symptom_match': 'reduced smell'}
+                    ]
+                },
+                {
+                    'snomed_id': 'USER_deviated_septum',
+                    'name': 'Deviated septum',
+                    'symptoms': [{'source': 'user', 'symptom': 'constant one-side blockage'}],
+                    'finding_sites': ['nose'],
+                    'nhs_url': '',
+                    'overview': '',
+                    'questions': [
+                        {'id': 'q_septum_block', 'text': 'Is one side of your nose always blocked even without infection?', 'options': ['Yes', 'No'], 'type': 'single_choice', 'priority': 5, 'symptom_match': 'constant one-side blockage'}
+                    ]
+                }
+            ],
+            'back': [
+                {
+                    'snomed_id': 'USER_muscle_strain',
+                    'name': 'Muscle strain',
+                    'symptoms': [{'source': 'user', 'symptom': 'pain after lifting'}, {'source': 'user', 'symptom': 'localized stiffness'}],
+                    'finding_sites': ['back'],
+                    'nhs_url': '',
+                    'overview': '',
+                    'questions': [
+                        {'id': 'q_strain_lift', 'text': 'Did the pain start after lifting something heavy or sudden movement?', 'options': ['Yes', 'No'], 'type': 'single_choice', 'priority': 5, 'symptom_match': 'pain after lifting'}
+                    ]
+                },
+                {
+                    'snomed_id': 'USER_spinal_stenosis',
+                    'name': 'Spinal stenosis',
+                    'symptoms': [{'source': 'user', 'symptom': 'leg numbness while walking'}],
+                    'finding_sites': ['back'],
+                    'nhs_url': '',
+                    'overview': '',
+                    'questions': [
+                        {'id': 'q_stenosis_leg', 'text': 'Do you feel leg pain or numbness that worsens when walking?', 'options': ['Yes', 'No'], 'type': 'single_choice', 'priority': 5, 'symptom_match': 'leg numbness while walking'}
+                    ]
+                },
+                {
+                    'snomed_id': 'USER_ankylosing_spondylitis',
+                    'name': 'Ankylosing spondylitis',
+                    'symptoms': [{'source': 'user', 'symptom': 'morning stiffness improving with activity'}],
+                    'finding_sites': ['back'],
+                    'nhs_url': '',
+                    'overview': '',
+                    'questions': [
+                        {'id': 'q_ank_spond_morning', 'text': 'Is back stiffness worse in the morning but better with movement?', 'options': ['Yes', 'No'], 'type': 'single_choice', 'priority': 5, 'symptom_match': 'morning stiffness improving with activity'}
+                    ]
+                },
+                {
+                    'snomed_id': 'USER_vertebral_compression_fracture',
+                    'name': 'Vertebral compression fracture',
+                    'symptoms': [{'source': 'user', 'symptom': 'sudden severe pain'}, {'source': 'user', 'symptom': 'older age'}],
+                    'finding_sites': ['back'],
+                    'nhs_url': '',
+                    'overview': '',
+                    'questions': [
+                        {'id': 'q_vcf_sudden', 'text': 'Did severe back pain start suddenly after a minor fall or in older age?', 'options': ['Yes', 'No'], 'type': 'single_choice', 'priority': 5, 'symptom_match': 'sudden severe pain'}
+                    ]
+                }
+            ],
+        # ... (other body areas omitted for brevity, add as needed) ...
+    }
+
     def __init__(self, snomed_path: str, gemini_api_key: Optional[str] = None):
         """
         Initialize dynamic discovery system
@@ -151,7 +289,7 @@ class DynamicDiseaseDiscovery:
         Args:
             body_area: Body area selected by user
             limit: Maximum diseases to discover
-            
+        
         Returns:
             List of discovered diseases with merged SNOMED + NHS UK data
         """
@@ -159,6 +297,12 @@ class DynamicDiseaseDiscovery:
         
         discovered = []
         discovered_names = set()  # Prevent duplicates
+        # Source 1.5: User-provided hardcoded diseases
+        for user_disease in self.HARDCODED_DISEASES.get(body_area, []):
+            if user_disease['name'].lower() not in discovered_names:
+                discovered.append(user_disease)
+                discovered_names.add(user_disease['name'].lower())
+                logger.info(f"  ✓ {user_disease['name']} (User)")
         
         # Source 1: NHS UK (fast, reliable)
         logger.info(f"Querying NHS UK for {body_area} conditions...")
@@ -187,25 +331,29 @@ class DynamicDiseaseDiscovery:
                     discovered_names.add(disease_name.lower())
                     logger.info(f"  ✓ {disease_name} (NHS UK)")
         
+        # Source 1.5: User-provided hardcoded diseases
+        for user_disease in self.HARDCODED_DISEASES.get(body_area, []):
+            if user_disease['name'].lower() not in discovered_names:
+                discovered.append(user_disease)
+                discovered_names.add(user_disease['name'].lower())
+                logger.info(f"  ✓ {user_disease['name']} (User)")
+
         # Source 2: SNOMED (comprehensive but slower)
         if len(discovered) < limit:
             logger.info(f"Querying SNOMED for {body_area} disorders...")
             snomed_term = self.body_area_map.get(body_area, body_area)
             snomed_diseases = self.snomed.search_by_body_area(snomed_term, limit=limit-len(discovered))
-            
             for disease in snomed_diseases:
                 disease_name = disease['term']
-                
-                # Skip if already found from NHS UK
+                # Skip if already found from NHS UK or user
                 if disease_name.lower() in discovered_names:
                     continue
-                
                 disease_data = self._enrich_disease_data(disease)
                 if disease_data and disease_data['symptoms']:
                     discovered.append(disease_data)
                     discovered_names.add(disease_name.lower())
                     logger.info(f"  ✓ {disease_name} (SNOMED)")
-        
+
         logger.info(f"Discovered {len(discovered)} total diseases for {body_area}")
         return discovered[:limit]
     
@@ -281,18 +429,20 @@ class DynamicDiseaseDiscovery:
         }
     
     def generate_questions_for_disease(self, disease_data: Dict[str, Any]) -> List[Dict[str, Any]]:
+        # Use hardcoded questions if present
+        if 'questions' in disease_data and disease_data['questions']:
+            return disease_data['questions']
         """
         Generate discriminating questions for a disease
         Uses Gemini if available, falls back to template-based
         
         Args:
             disease_data: Enriched disease data
-            
+        
         Returns:
             List of questions
         """
         symptoms = [s['symptom'] for s in disease_data['symptoms']]
-        
         # Try Gemini first
         if self.gemini:
             try:
@@ -305,7 +455,6 @@ class DynamicDiseaseDiscovery:
                     return questions
             except Exception as e:
                 logger.warning(f"Gemini question generation failed: {e}")
-        
         # Fallback to template-based questions
         return self._generate_template_questions(disease_data)
     

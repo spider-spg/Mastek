@@ -9,9 +9,10 @@ import logging
 from typing import Dict, List, Any
 from dynamic_diagnostic_engine import DynamicDiseaseDiscovery
 
-logging.basicConfig(level=logging.WARNING, format='%(message)s')
-for name in logging.root.manager.loggerDict:
-    logging.getLogger(name).setLevel(logging.WARNING)
+# logging.basicConfig(level=logging.WARNING, format='%(message)s')
+# for name in logging.root.manager.loggerDict:
+#     logging.getLogger(name).setLevel(logging.WARNING)
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
 
 
@@ -87,10 +88,10 @@ def terminal_interface():
     all_discovered_diseases = []
     
     for area in selected_areas:
-        # print(f"🔎 Searching diseases for: {area}...")
+        print(f"🔎 Searching diseases for: {area}...")
         diseases = engine.discover_diseases_for_body_area(area, limit=10)
         all_discovered_diseases.extend(diseases)
-        # print(f"   Found {len(diseases)} diseases\n")
+        print(f"   Found {len(diseases)} diseases\n")
     
     if not all_discovered_diseases:
         print("❌ No diseases discovered for selected areas.")
