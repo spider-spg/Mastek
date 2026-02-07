@@ -476,56 +476,92 @@ class DynamicDiseaseDiscovery:
             # Check each symptom against answers
             for symptom_data in disease_data['symptoms']:
                 symptom = symptom_data['symptom'].lower()
-                
-                # Check if user answered "yes" to any question containing this symptom
+                matched_this_symptom = False
                 for answer_key, answer_value in user_answers.items():
                     if isinstance(answer_value, str):
                         answer_lower = answer_value.lower()
-                        
-                        # If user said "yes" and the question was about this symptom
                         if answer_lower == 'yes':
-                            # Extract question text from the question ID or check if symptom keywords match
-                            symptom_keywords = symptom.split()[:3]  # First 3 words
+                            symptom_keywords = symptom.split()[:3]
                             for keyword in symptom_keywords:
                                 if len(keyword) > 3 and keyword in answer_key.lower():
-                                    matched += 1
-                                    matched_symptoms.append(symptom)
+                                    matched_this_symptom = True
                                     break
-                            
-                            # Also check direct symptom mention in question
-                            if symptom[:20] in answer_key.lower():  # First 20 chars of symptom
-                                matched += 1
-                                matched_symptoms.append(symptom)
+                            if symptom[:20] in answer_key.lower():
+                                matched_this_symptom = True
                                 break
-                    
                     elif isinstance(answer_value, list):
-                        # Multiple choice answer
                         for val in answer_value:
                             if val and symptom[:15] in str(val).lower():
-                                matched += 1
-                                matched_symptoms.append(symptom)
+                                matched_this_symptom = True
                                 break
+                if matched_this_symptom:
+                    matched += 1
+                    matched_symptoms.append(symptom)
             
             # Even with 1 match, include it (for better results)
             if matched > 0:
-                # Confidence based on proportion of symptoms matched
-                confidence = min((matched / total_symptoms) * 1.5, 1.0)  # Boost confidence
-                
+                # Confidence based strictly on proportion of symptoms matched
+                confidence = matched / total_symptoms if total_symptoms else 0.0
+                triage = (
+                    self.gemini.classify_disease_triage(
+                        disease_data['name'],
+                        matched_symptoms if matched_symptoms else [s['symptom'] for s in disease_data['symptoms']],
+                        disease_data.get('overview', '')
+                    ) if self.gemini else self._rule_based_triage(
+                        disease_data['name'],
+                        matched_symptoms if matched_symptoms else [s['symptom'] for s in disease_data['symptoms']]
+                    )
+                )
+                home_remedies = None
+                if triage == 'home care' and self.gemini:
+                    try:
+                        remedies_prompt = f"""
+You are a medical assistant. Suggest 2-3 simple home remedies or exercises for the following condition:
+Condition: {disease_data['name']}
+Symptoms: {', '.join(matched_symptoms if matched_symptoms else [s['symptom'] for s in disease_data['symptoms']])}
+Overview: {disease_data.get('overview', '')[:200]}
+
+Return ONLY a numbered list of remedies/exercises, each 1-2 sentences. Do not mention consulting a doctor unless asked. Do not add extra text.
+"""
+                        remedies_response = self.gemini.model.generate_content(remedies_prompt)
+                        remedies_text = remedies_response.text.strip()
+                        home_remedies = remedies_text + "\n\nPerform these remedies/exercises for 2-3 days. If not recovered or you do not feel better, consult medical help."
+                    except Exception as e:
+                        home_remedies = "Unable to generate home remedies at this time."
                 results.append({
                     'disease': disease_data['name'],
                     'snomed_code': disease_data['snomed_id'],
                     'confidence': confidence,
-                    'confidence_percentage': f"{round(confidence * 100)}%",
+                    'confidence_percentage': f"{confidence * 100:.1f}%",
                     'matched_symptoms': list(set(matched_symptoms)),  # Remove duplicates
                     'total_symptoms': total_symptoms,
                     'nhs_url': disease_data.get('nhs_url'),
-                    'overview': disease_data.get('overview', '')
+                    'overview': disease_data.get('overview', ''),
+                    'triage': triage,
+                    'home_remedies': home_remedies if triage == 'home care' else None
                 })
-        
+
         # Sort by confidence
         results.sort(key=lambda x: x['confidence'], reverse=True)
-        
         return results
+
+    def _rule_based_triage(self, disease_name: str, symptoms: List[str]) -> str:
+        emergency_keywords = [
+            'chest pain', 'shortness of breath', 'severe pain', 'bleeding', 'unconscious',
+            'difficulty breathing', 'severe headache', 'sudden weakness', 'vision loss',
+            'confusion', 'high fever', 'stroke', 'heart attack', 'crushing pain', 'sepsis', 'loss of consciousness'
+        ]
+        medical_attention_keywords = [
+            'infection', 'pneumonia', 'bronchitis', 'asthma', 'appendicitis', 'cellulitis', 'diabetes', 'angina', 'fracture', 'meningitis', 'concussion', 'dvt', 'varicose veins', 'gout', 'arthritis', 'psoriasis', 'shingles', 'tonsillitis', 'labyrinthitis', 'glaucoma', 'cataracts', 'stroke', 'heart disease', 'high blood pressure', 'rheumatoid arthritis', 'osteoarthritis', 'pleurisy', 'constipation', 'diarrhoea', 'food poisoning', 'sinusitis', 'nosebleed', 'nasal polyps', 'ear infections', 'tinnitus', 'earwax build-up', 'dry eyes', 'migraine', 'eczema', 'chickenpox', 'hives', 'rashes', 'sciatica', 'slipped disc', 'carpal tunnel syndrome', 'tennis elbow', 'repetitive strain injury', 'fever', 'coronavirus', 'covid-19'
+        ]
+        disease_name_lower = disease_name.lower()
+        for kw in emergency_keywords:
+            if kw in disease_name_lower or any(kw in s.lower() for s in symptoms):
+                return 'emergency'
+        for kw in medical_attention_keywords:
+            if kw in disease_name_lower or any(kw in s.lower() for s in symptoms):
+                return 'requires medical attention'
+        return 'home care'
 
 
 if __name__ == "__main__":
@@ -565,10 +601,10 @@ if __name__ == "__main__":
         'has_chest_pain': 'yes',
         'has_fever': 'yes'
     }
-    
+
     diagnoses = engine.diagnose_from_answers(diseases, sample_answers)
     print(f"\n   Found {len(diagnoses)} matches:")
     for d in diagnoses[:3]:
-        print(f"   - {d['disease']}: {d['confidence_percentage']}")
-    
+        print(f"   - {d['disease']}: {d['confidence_percentage']} | Triage: {d['triage']}")
+
     print("\n" + "=" * 70)

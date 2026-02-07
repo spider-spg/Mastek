@@ -32,6 +32,37 @@ class GeminiClient:
         # Use Gemini 2.0 Flash model
         self.model = genai.GenerativeModel('gemini-2.0-flash')
     
+    def classify_disease_triage(self, disease_name: str, symptoms: List[str], overview: str = "") -> str:
+        """
+        Use Gemini to classify disease triage: emergency, requires medical attention, or home care
+        """
+        prompt = f"""
+You are a medical triage assistant. Classify the following disease into one of three categories:
+1. emergency
+2. requires medical attention
+3. home care
+
+Disease: {disease_name}
+Symptoms: {', '.join(symptoms)}
+Overview: {overview[:200]}
+
+Return ONLY the category as a string: 'emergency', 'requires medical attention', or 'home care'.
+"""
+        try:
+            response = self.model.generate_content(prompt)
+            text = response.text.strip().lower()
+            if 'emergency' in text:
+                return 'emergency'
+            elif 'requires medical attention' in text:
+                return 'requires medical attention'
+            elif 'home care' in text:
+                return 'home care'
+            else:
+                return 'unknown'
+        except Exception as e:
+            logger.error(f"Error classifying triage: {e}")
+            return 'unknown'
+    
     def generate_questions_for_disease(
         self, 
         disease_name: str, 

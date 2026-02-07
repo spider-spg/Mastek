@@ -242,17 +242,23 @@ def terminal_interface():
         print("=" * 70)
         print(f"Confidence: {diagnosis['confidence_percentage']} ({diagnosis['confidence']:.2f})")
         print(f"SNOMED Code: {diagnosis['snomed_code']}")
+        print(f"Triage: {diagnosis.get('triage', 'unknown').capitalize()}")
         print(f"\nMatched Symptoms ({len(diagnosis['matched_symptoms'])}/{diagnosis['total_symptoms']}):")
         for symptom in diagnosis['matched_symptoms'][:5]:
             print(f"  • {symptom}")
-        
+
         if diagnosis.get('nhs_url'):
             print(f"\nNHS UK Information:")
             print(f"  URL: {diagnosis['nhs_url']}")
-        
+
         if diagnosis.get('overview'):
             print(f"\n  Overview: {diagnosis['overview'][:200]}...")
-        
+
+        # Show home remedies if triage is home care
+        if diagnosis.get('triage') == 'home care' and diagnosis.get('home_remedies'):
+            print("\n🏠 Home Remedies/Exercises:")
+            print(diagnosis['home_remedies'])
+
         print("\n" + "=" * 70 + "\n")
     
     print("⚠️  DISCLAIMER: This is not a substitute for professional medical advice.")
