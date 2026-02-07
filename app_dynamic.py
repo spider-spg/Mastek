@@ -9,7 +9,9 @@ import logging
 from typing import Dict, List, Any
 from dynamic_diagnostic_engine import DynamicDiseaseDiscovery
 
-logging.basicConfig(level=logging.INFO, format='%(message)s')
+logging.basicConfig(level=logging.WARNING, format='%(message)s')
+for name in logging.root.manager.loggerDict:
+    logging.getLogger(name).setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 
@@ -54,7 +56,7 @@ def terminal_interface():
     print("✅ Engine initialized!\n")
     
     # Phase 1: Body area selection
-    print("📍 PHASE 1: Body Area Selection")
+    print("📍Body Area Selection")
     print("-" * 70)
     print("Available body areas:\n")
     
@@ -76,45 +78,45 @@ def terminal_interface():
     print(f"\n✅ Selected areas: {', '.join([BODY_AREAS[k]['name'] for k in body_input.split(',') if k.strip() in BODY_AREAS])}")
     
     # Phase 2: Dynamic disease discovery
-    print("\n" + "=" * 70)
-    print("🔍 PHASE 2: Discovering Relevant Diseases")
-    print("=" * 70)
-    print("Querying SNOMED CT + NHS UK for diseases affecting selected areas...")
-    print("(This discovers diseases dynamically - not from hardcoded list)\n")
+    # print("\n" + "=" * 70)
+    # print("🔍 PHASE 2: Discovering Relevant Diseases")
+    # print("=" * 70)
+    # print("Querying SNOMED CT + NHS UK for diseases affecting selected areas...")
+    # print("(This discovers diseases dynamically - not from hardcoded list)\n")
     
     all_discovered_diseases = []
     
     for area in selected_areas:
-        print(f"🔎 Searching diseases for: {area}...")
+        # print(f"🔎 Searching diseases for: {area}...")
         diseases = engine.discover_diseases_for_body_area(area, limit=10)
         all_discovered_diseases.extend(diseases)
-        print(f"   Found {len(diseases)} diseases\n")
+        # print(f"   Found {len(diseases)} diseases\n")
     
     if not all_discovered_diseases:
         print("❌ No diseases discovered for selected areas.")
         print("   Try different body areas or check SNOMED data.")
         return
     
-    print(f"✅ Total discovered: {len(all_discovered_diseases)} unique diseases\n")
+   # print(f"✅ Total discovered: {len(all_discovered_diseases)} unique diseases\n")
     
     # Show discovered diseases
-    print("📋 Discovered Diseases:")
-    print("-" * 70)
-    for i, disease in enumerate(all_discovered_diseases[:10], 1):
-        print(f"{i}. {disease['name']}")
-        print(f"   SNOMED: {disease['snomed_id']}")
-        print(f"   Symptoms: {len(disease['symptoms'])} found")
-        print()
+    # print("📋 Discovered Diseases:")
+    # print("-" * 70)
+    # for i, disease in enumerate(all_discovered_diseases[:10], 1):
+    #     # print(f"{i}. {disease['name']}")
+    #     # print(f"   SNOMED: {disease['snomed_id']}")
+    #     # print(f"   Symptoms: {len(disease['symptoms'])} found")
+    #       print()
     
-    if len(all_discovered_diseases) > 10:
-        print(f"... and {len(all_discovered_diseases) - 10} more\n")
+    # if len(all_discovered_diseases) > 10:
+    #     print(f"... and {len(all_discovered_diseases) - 10} more\n")
     
-    # Phase 3: Generate questions
-    print("=" * 70)
-    print("❓ PHASE 3: Generating Diagnostic Questions")
-    print("=" * 70)
-    print("Generating questions dynamically from discovered diseases...")
-    print("(Using Gemini AI if available, fallback to templates)\n")
+    # # Phase 3: Generate questions
+    # print("=" * 70)
+    # print("❓ PHASE 3: Generating Diagnostic Questions")
+    # print("=" * 70)
+    # print("Generating questions dynamically from discovered diseases...")
+    # print("(Using Gemini AI if available, fallback to templates)\n")
     
     # Generate questions for ALL diseases, organized by disease
     questions_by_disease = {}
@@ -140,7 +142,7 @@ def terminal_interface():
             all_questions_flat.append(q)
     
     # Prioritize questions before deduplication
-    print("⚡ Prioritizing questions by diagnostic value...")
+   # print("⚡ Prioritizing questions by diagnostic value...")
     prioritized_questions = engine.prioritize_questions(all_questions_flat, all_discovered_diseases)
     
     # Now deduplicate the prioritized questions
@@ -168,12 +170,11 @@ def terminal_interface():
     max_questions = 15
     questions_to_ask = all_questions[:max_questions]
     
-    print(f"✅ Generated {len(questions_to_ask)} unique questions (after deduplication and prioritization)\n")
-    print(f"   📊 Top priority questions cover: severity, discriminating symptoms, common diseases\n")
+    #int(f"   📊 Top priority questions cover: severity, discriminating symptoms, common diseases\n")
     
     # Ask questions
     print("=" * 70)
-    print("💬 PHASE 4: Answer Questions")
+    print("💬 Answer Questions")
     print("=" * 70)
     
     user_answers = {}
@@ -211,7 +212,7 @@ def terminal_interface():
     
     # Phase 5: Diagnosis
     print("\n" + "=" * 70)
-    print("🔬 PHASE 5: Running Diagnostic Analysis")
+    print("🔬 Running Diagnostic Analysis")
     print("=" * 70)
     print("Matching answers against discovered diseases...\n")
     
