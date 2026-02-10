@@ -1,0 +1,314 @@
+[
+  {
+    "name": "Malaria",
+    "body_area": "general",
+    "symptoms": ["fever", "chills", "sweating"],
+    "questions": [
+      "Is your fever intermittent or occurs on alternate days?",
+      "Do you experience chills and sweating cycles?",
+      "Have you recently traveled to a malaria-prone area?",
+      "How severe is your fever? (mild/severe)"
+    ]
+  },
+  {
+    "name": "Dengue",
+    "body_area": "general",
+    "symptoms": ["fever", "severe body pain", "headache behind eyes", "rash"],
+    "questions": [
+      "Is your fever continuous and high?",
+      "Do you have severe body pain, especially muscle and joint pain?",
+      "Is there pain behind your eyes?",
+      "Do you have a rash on your skin?",
+      "How severe is your fever? (mild/severe)"
+    ]
+  },
+  {
+    "name": "Typhoid",
+    "body_area": "general",
+    "symptoms": ["fever", "weakness", "abdominal pain", "loss of appetite"],
+    "questions": [
+      "Has your fever lasted more than a week?",
+      "Do you feel weak and have abdominal pain?",
+      "Have you lost your appetite recently?",
+      "Is your fever higher in the evening?",
+      "How severe is your fever? (mild/severe)"
+    ]
+  },
+  {
+    "name": "Common cold",
+    "body_area": "nose",
+    "symptoms": ["runny nose", "sneezing", "fever", "sore throat"],
+    "questions": [
+      "Do you have a runny nose and sneezing?",
+      "Is your fever mild?",
+      "Do you have a sore throat?",
+      "How severe is your fever? (mild/severe)"
+    ]
+  },
+  {
+    "name": "Influenza (flu)",
+    "body_area": "general",
+    "symptoms": ["fever", "body aches", "fatigue", "dry cough"],
+    "questions": [
+      "Did your fever start suddenly and is it high?",
+      "Do you have body aches and fatigue?",
+      "Do you have a dry cough?",
+      "How severe is your fever? (mild/severe)"
+    ]
+  },
+  {
+    "name": "COVID-19",
+    "body_area": "general",
+    "symptoms": ["fever", "dry cough", "loss of smell/taste", "breathing difficulty"],
+    "questions": [
+      "Do you have a dry cough?",
+      "Have you lost your sense of smell or taste?",
+      "Are you experiencing difficulty breathing?",
+      "How severe is your fever? (mild/severe)"
+    ]
+  },
+  {
+    "name": "Tuberculosis",
+    "body_area": "general",
+    "symptoms": ["chronic cough >2 weeks", "weight loss", "night sweats", "fever"],
+    "questions": [
+      "Has your cough lasted more than two weeks?",
+      "Have you lost weight recently?",
+      "Do you have night sweats?",
+      "Is your fever mild and persistent?",
+      "How severe is your fever? (mild/severe)"
+    ]
+  },
+  {
+    "name": "Pneumonia",
+    "body_area": "chest",
+    "symptoms": ["fever", "chest pain", "cough with phlegm", "breathing difficulty"],
+    "questions": [
+      "Do you have chest pain and cough with phlegm?",
+      "Are you experiencing difficulty breathing?",
+      "Is your fever high?",
+      "How severe is your fever? (mild/severe)"
+    ]
+  },
+  {
+    "name": "Bronchitis",
+    "body_area": "chest",
+    "symptoms": ["persistent cough with mucus", "chest discomfort", "fever"],
+    "questions": [
+      "Do you have a persistent cough with mucus?",
+      "Is your fever mild?",
+      "Do you feel discomfort in your chest?",
+      "How severe is your fever? (mild/severe)"
+    ]
+  },
+  {
+    "name": "Asthma",
+    "body_area": "chest",
+    "symptoms": ["wheezing", "shortness of breath", "chest tightness", "worse at night"],
+    "questions": [
+      "Do you experience wheezing and shortness of breath?",
+      "Is your chest tightness worse at night?"
+    ]
+  },
+  {
+    "name": "Gastroenteritis",
+    "body_area": "abdomen",
+    "symptoms": ["vomiting", "diarrhea", "stomach cramps", "fever"],
+    "questions": [
+      "Do you have vomiting and diarrhea?",
+      "Are you experiencing stomach cramps?",
+      "Is your fever mild?",
+      "How severe is your fever? (mild/severe)"
+    ]
+  },
+  {
+    "name": "Food poisoning",
+    "body_area": "abdomen",
+    "symptoms": ["sudden vomiting", "diarrhea", "abdominal pain after eating"],
+    "questions": [
+      "Did your symptoms start suddenly after eating?",
+      "Do you have vomiting and diarrhea?",
+      "Do you have abdominal pain after meals?"
+    ]
+  },
+  {
+    "name": "Appendicitis",
+    "body_area": "abdomen",
+    "symptoms": ["pain starting near navel → right lower abdomen", "nausea", "fever"],
+    "questions": [
+      "Did your pain start near the navel and move to the right lower abdomen?",
+      "Do you have nausea and fever?",
+      "How severe is your fever? (mild/severe)"
+    ]
+  },
+  {
+    "name": "Kidney stone",
+    "body_area": "back",
+    "symptoms": ["severe side/back pain", "blood in urine", "nausea"],
+    "questions": [
+      "Do you have severe pain in your side or back?",
+      "Have you noticed blood in your urine?",
+      "Do you feel nauseated?"
+    ]
+  },
+  {
+    "name": "Urinary tract infection",
+    "body_area": "abdomen",
+    "symptoms": ["burning urination", "frequent urge", "lower abdominal pain"],
+    "questions": [
+      "Do you feel burning when urinating?",
+      "Do you have a frequent urge to urinate?",
+      "Do you have lower abdominal pain?"
+    ]
+  },
+  {
+    "name": "Diabetes",
+    "body_area": "general",
+    "symptoms": ["excessive thirst", "frequent urination", "weight loss", "fatigue"],
+    "questions": [
+      "Are you excessively thirsty?",
+      "Do you urinate frequently?",
+      "Have you lost weight recently?",
+      "Do you feel fatigued?"
+    ]
+  },
+  {
+    "name": "Hypertension",
+    "body_area": "general",
+    "symptoms": ["often no symptoms", "sometimes headache or dizziness"],
+    "questions": [
+      "Have you measured high blood pressure?",
+      "Do you sometimes have headaches or dizziness?"
+    ]
+  },
+  {
+    "name": "Migraine",
+    "body_area": "head",
+    "symptoms": ["one-sided throbbing headache", "nausea", "light sensitivity"],
+    "questions": [
+      "Is your headache one-sided and throbbing?",
+      "Do you feel nauseated?",
+      "Are you sensitive to light during headaches?"
+    ]
+  },
+  {
+    "name": "Meningitis",
+    "body_area": "head",
+    "symptoms": ["fever", "neck stiffness", "confusion", "headache"],
+    "questions": [
+      "Do you have neck stiffness and confusion?",
+      "Is your fever high?",
+      "Do you have a headache?",
+      "How severe is your fever? (mild/severe)"
+    ]
+  },
+  {
+    "name": "Chickenpox",
+    "body_area": "skin",
+    "symptoms": ["itchy fluid-filled rash", "fever", "fatigue"],
+    "questions": [
+      "Do you have an itchy fluid-filled rash?",
+      "Do you have fever and fatigue?",
+      "How severe is your fever? (mild/severe)"
+    ]
+  },
+  {
+    "name": "Measles",
+    "body_area": "skin",
+    "symptoms": ["fever", "cough", "runny nose", "red rash starting on face"],
+    "questions": [
+      "Do you have a red rash starting on your face?",
+      "Do you have fever, cough, and runny nose?",
+      "How severe is your fever? (mild/severe)"
+    ]
+  },
+  {
+    "name": "Hepatitis A",
+    "body_area": "abdomen",
+    "symptoms": ["jaundice", "fatigue", "abdominal pain", "nausea"],
+    "questions": [
+      "Do you have jaundice (yellow skin/eyes)?",
+      "Do you feel fatigued and have abdominal pain?",
+      "Do you feel nauseated?"
+    ]
+  },
+  {
+    "name": "Jaundice (general)",
+    "body_area": "abdomen",
+    "symptoms": ["yellow skin/eyes", "dark urine", "pale stool"],
+    "questions": [
+      "Do you have yellow skin or eyes?",
+      "Is your urine dark and stool pale?"
+    ]
+  },
+  {
+    "name": "Anemia",
+    "body_area": "general",
+    "symptoms": ["fatigue", "pale skin", "dizziness", "shortness of breath"],
+    "questions": [
+      "Do you feel fatigued and dizzy?",
+      "Is your skin pale?",
+      "Do you experience shortness of breath?"
+    ]
+  },
+  {
+    "name": "Hypothyroidism",
+    "body_area": "general",
+    "symptoms": ["weight gain", "cold intolerance", "fatigue", "dry skin"],
+    "questions": [
+      "Have you gained weight recently?",
+      "Do you feel cold easily?",
+      "Do you feel fatigued and have dry skin?"
+    ]
+  },
+  {
+    "name": "Hyperthyroidism",
+    "body_area": "general",
+    "symptoms": ["weight loss", "sweating", "fast heartbeat", "anxiety"],
+    "questions": [
+      "Have you lost weight recently?",
+      "Do you sweat excessively?",
+      "Is your heartbeat fast?",
+      "Do you feel anxious?"
+    ]
+  },
+  {
+    "name": "Allergic rhinitis",
+    "body_area": "nose",
+    "symptoms": ["sneezing", "runny nose", "itchy eyes", "seasonal pattern"],
+    "questions": [
+      "Do you have sneezing and runny nose?",
+      "Are your eyes itchy?",
+      "Do your symptoms follow a seasonal pattern?"
+    ]
+  },
+  {
+    "name": "Sinusitis",
+    "body_area": "nose",
+    "symptoms": ["facial pain", "nasal blockage", "headache", "thick nasal discharge"],
+    "questions": [
+      "Do you have facial pain and nasal blockage?",
+      "Do you have a headache and thick nasal discharge?"
+    ]
+  },
+  {
+    "name": "GERD (acid reflux)",
+    "body_area": "abdomen",
+    "symptoms": ["burning chest pain after meals", "sour taste", "cough at night"],
+    "questions": [
+      "Do you have burning chest pain after meals?",
+      "Do you have a sour taste in your mouth?",
+      "Do you cough at night?"
+    ]
+  },
+  {
+    "name": "Peptic ulcer",
+    "body_area": "abdomen",
+    "symptoms": ["stomach pain when empty", "relief after eating", "bloating"],
+    "questions": [
+      "Do you have stomach pain when your stomach is empty?",
+      "Is the pain relieved after eating?",
+      "Do you feel bloated?"
+    ]
+  }
+]

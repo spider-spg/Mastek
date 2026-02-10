@@ -102,7 +102,41 @@ class NHSUKScraper:
 
 
 class DynamicDiseaseDiscovery:
-        # User-provided hardcoded diseases, symptoms, and questions
+    def get_merged_prioritized_questions(self, merged_diseases: List[Dict[str, Any]], max_questions: int = 15) -> List[Dict[str, Any]]:
+        """
+        Generate, merge, deduplicate, and prioritize questions for a list of diseases.
+        Args:
+            merged_diseases: List of disease dicts (each with symptoms/questions)
+            max_questions: Maximum number of questions to return
+        Returns:
+            List of prioritized questions
+        """
+        all_questions = []
+        seen_texts = set()
+        for disease in merged_diseases:
+            questions = self.generate_questions_for_disease(disease)
+            for q in questions:
+                # Deduplicate by question text
+                text = q.get('text', '').strip()
+                if text and text not in seen_texts:
+                    # Attach disease name(s) for context
+                    q['disease_names'] = [disease.get('name', 'Unknown')]
+                    all_questions.append(q)
+                    seen_texts.add(text)
+                else:
+                    # If duplicate, append disease name to existing question
+                    for existing in all_questions:
+                        if existing.get('text', '').strip() == text:
+                            if 'disease_names' in existing:
+                                existing['disease_names'].append(disease.get('name', 'Unknown'))
+                            else:
+                                existing['disease_names'] = [existing.get('disease_name', 'Unknown'), disease.get('name', 'Unknown')]
+                            break
+        # Prioritize and limit
+        prioritized = self.prioritize_questions(all_questions, merged_diseases)
+        return prioritized[:max_questions]
+
+    # User-provided hardcoded diseases, symptoms, and questions
     HARDCODED_DISEASES = {
             'head': [
                 {

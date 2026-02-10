@@ -4,8 +4,10 @@ Integrates SNOMED Local + NHS UK + Gemini AI
 No hardcoded disease rules - all discovered at runtime
 """
 
+
 import os
 import logging
+import json
 from typing import Dict, List, Any
 from dynamic_diagnostic_engine import DynamicDiseaseDiscovery
 
@@ -86,13 +88,40 @@ def terminal_interface():
     # print("Querying SNOMED CT + NHS UK for diseases affecting selected areas...")
     # print("(This discovers diseases dynamically - not from hardcoded list)\n")
     
+
+    # Load extra diseases from JSON file (classified by body_area)
+    json_diseases = []
+    try:
+        with open("diseases_symptoms_questions.json", "r", encoding="utf-8") as f:
+            json_diseases = json.load(f)
+    except Exception as e:
+        print(f"Warning: Could not load diseases_symptoms_questions.json: {e}")
+
     all_discovered_diseases = []
 
     for area in selected_areas:
         print(f"🔎 Searching diseases for: {area}...")
         diseases = engine.discover_diseases_for_body_area(area, limit=10)
         all_discovered_diseases.extend(diseases)
-        print(f"   Found {len(diseases)} diseases\n")
+        # Add JSON diseases for this area
+        for jd in json_diseases:
+            if jd.get("body_area") == area:
+                # Convert to dynamic-like dict
+                all_discovered_diseases.append({
+                    'name': jd['name'],
+                    'snomed_id': f"json_{jd['name'].replace(' ', '_').lower()}",
+                    'symptoms': [{'symptom': s} for s in jd.get('symptoms', [])],
+                    'questions': [
+                        {'id': f"jsonq_{i}_{jd['name'].replace(' ', '_').lower()}",
+                         'text': q,
+                         'options': ['Yes', 'No'],
+                         'type': 'single_choice',
+                         'priority': 5,
+                         'symptom_match': jd.get('symptoms', [])[i] if i < len(jd.get('symptoms', [])) else ''
+                        } for i, q in enumerate(jd.get('questions', []))
+                    ]
+                })
+        print(f"   Found {len(diseases)} diseases (+{sum(1 for jd in json_diseases if jd.get('body_area') == area)} from JSON)\n")
 
     # Hardcoded rules
     HARDCODED_DISEASES = {
@@ -155,90 +184,52 @@ def terminal_interface():
         print("   Try different body areas or check SNOMED data.")
         return
 
-    # Generate questions for ALL diseases, organized by disease
-    questions_by_disease = {}
-    for disease in merged_diseases:
-        disease_id = disease.get('snomed_id', '')
-        if 'question' in disease and 'options' in disease:
-            # Hardcoded disease
-            questions = [{
-                'id': disease['id'],
-                'text': disease['question'],
-                'options': disease['options'],
-                'disease_name': disease['name'],
-                'disease_id': disease_id,
-                'symptom_match': ', '.join([s['symptom'] for s in disease['symptoms']])
-            }]
-        else:
-            questions = engine.generate_questions_for_disease(disease)
-        if questions:
-            questions_by_disease[disease_id] = {
-                'disease': disease,
-                'questions': questions
-            }
-
-    # Flatten questions and deduplicate by question text
-    questions_map = {}  # question_text -> question data
-    all_questions_flat = []
-    for disease_id, data in questions_by_disease.items():
-        for q in data['questions']:
-            q['disease_name'] = data['disease']['name']
-            q['disease_id'] = disease_id
-            all_questions_flat.append(q)
-
-    # Prioritize questions before deduplication
-    prioritized_questions = engine.prioritize_questions(all_questions_flat, merged_diseases)
-
-    # Now deduplicate the prioritized questions
-    for q in prioritized_questions:
-        q_text = q['text'].lower().strip()
-        if q_text in questions_map:
-            # Question already exists - add this disease to the list
-            if 'disease_names' not in questions_map[q_text]:
-                questions_map[q_text]['disease_names'] = [questions_map[q_text].get('disease_name', 'Unknown')]
-                questions_map[q_text]['disease_ids'] = [questions_map[q_text].get('disease_id')]
-            questions_map[q_text]['disease_names'].append(q['disease_name'])
-            questions_map[q_text]['disease_ids'].append(q['disease_id'])
-        else:
-            # New question
-            q['disease_names'] = [q['disease_name']]
-            q['disease_ids'] = [q['disease_id']]
-            questions_map[q_text] = q
-
-    # Convert back to list (already in priority order)
-    all_questions = list(questions_map.values())
-    max_questions = 15
-    questions_to_ask = all_questions[:max_questions]
-
+    # Stepwise questioning: one high-priority question per disease, follow up only if 'Yes'
     print("=" * 70)
     print("💬 Answer Questions")
     print("=" * 70)
 
     user_answers = {}
-    for i, q in enumerate(questions_to_ask, 1):
-        print(f"\n[Q{i}] {q['text']}")
-        disease_names = q.get('disease_names', [q.get('disease_name', 'Unknown')])
-        if len(disease_names) > 1:
-            print(f"    (Checking for: {', '.join(disease_names)})")
-        else:
-            print(f"    (Checking for: {disease_names[0]})")
-        print()
-        for j, opt in enumerate(q['options'], 1):
-            print(f"  {j}. {opt}")
-        answer_input = input(f"\n➤ Enter number: ").strip()
-        try:
-            answer_idx = int(answer_input) - 1
-            if 0 <= answer_idx < len(q['options']):
-                disease_ids = q.get('disease_ids', [q.get('disease_id')])
-                user_answers[q['id']] = {
-                    'answer': q['options'][answer_idx],
-                    'symptom': q.get('symptom_match', ''),
-                    'disease_ids': disease_ids
-                }
-                print(f"   ✓ Answered: {q['options'][answer_idx]}")
-        except:
-            print("   ✗ Invalid input, skipped")
-
+    remaining_diseases = merged_diseases.copy()
+    asked_questions = set()
+    round_num = 1
+    while remaining_diseases:
+        print(f"\n--- Question Round {round_num} ---")
+        questions_this_round = []
+        for disease in remaining_diseases:
+            qs = disease.get('questions') or engine.generate_questions_for_disease(disease)
+            # Find first unasked question for this disease
+            for q in qs:
+                qid = (disease['name'], q['text'])
+                if qid not in asked_questions:
+                    questions_this_round.append((disease, q))
+                    asked_questions.add(qid)
+                    break
+        if not questions_this_round:
+            break
+        next_diseases = []
+        for i, (disease, q) in enumerate(questions_this_round, 1):
+            print(f"\n[Q{i}] {q['text']}")
+            print(f"    (Checking for: {disease['name']})")
+            for j, opt in enumerate(q['options'], 1):
+                print(f"  {j}. {opt}")
+            answer_input = input(f"\n➤ Enter number: ").strip()
+            try:
+                answer_idx = int(answer_input) - 1
+                if 0 <= answer_idx < len(q['options']):
+                    user_answers[q['id']] = {
+                        'answer': q['options'][answer_idx],
+                        'symptom': q.get('symptom_match', ''),
+                        'disease_id': disease.get('snomed_id')
+                    }
+                    print(f"   ✓ Answered: {q['options'][answer_idx]}")
+                    if q['options'][answer_idx].lower() == 'yes':
+                        next_diseases.append(disease)
+            except:
+                print("   ✗ Invalid input, skipped")
+        # Only continue with diseases where user said 'Yes' to last question
+        remaining_diseases = next_diseases
+        round_num += 1
     print("\n" + "=" * 70)
     print("🔬 Running Diagnostic Analysis")
     print("=" * 70)

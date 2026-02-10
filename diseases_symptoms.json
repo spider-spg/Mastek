@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Malaria",
+    "symptoms": ["fever at specific intervals (often alternate days)", "chills", "sweating"]
+  },
+  {
+    "name": "Dengue",
+    "symptoms": ["high continuous fever", "severe body pain", "headache behind eyes", "rash"]
+  },
+  {
+    "name": "Typhoid",
+    "symptoms": ["long-lasting fever", "weakness", "abdominal pain", "loss of appetite"]
+  },
+  {
+    "name": "Common cold",
+    "symptoms": ["runny nose", "sneezing", "mild fever", "sore throat"]
+  },
+  {
+    "name": "Influenza (flu)",
+    "symptoms": ["sudden high fever", "body aches", "fatigue", "dry cough"]
+  },
+  {
+    "name": "COVID-19",
+    "symptoms": ["fever", "dry cough", "loss of smell/taste", "breathing difficulty"]
+  },
+  {
+    "name": "Tuberculosis",
+    "symptoms": ["chronic cough >2 weeks", "weight loss", "night sweats", "mild fever"]
+  },
+  {
+    "name": "Pneumonia",
+    "symptoms": ["fever", "chest pain", "cough with phlegm", "breathing difficulty"]
+  },
+  {
+    "name": "Bronchitis",
+    "symptoms": ["persistent cough with mucus", "chest discomfort", "mild fever"]
+  },
+  {
+    "name": "Asthma",
+    "symptoms": ["wheezing", "shortness of breath", "chest tightness", "worse at night"]
+  },
+  {
+    "name": "Gastroenteritis",
+    "symptoms": ["vomiting", "diarrhea", "stomach cramps", "mild fever"]
+  },
+  {
+    "name": "Food poisoning",
+    "symptoms": ["sudden vomiting", "diarrhea", "abdominal pain after eating"]
+  },
+  {
+    "name": "Appendicitis",
+    "symptoms": ["pain starting near navel → right lower abdomen", "nausea", "fever"]
+  },
+  {
+    "name": "Kidney stone",
+    "symptoms": ["severe side/back pain", "blood in urine", "nausea"]
+  },
+  {
+    "name": "Urinary tract infection",
+    "symptoms": ["burning urination", "frequent urge", "lower abdominal pain"]
+  },
+  {
+    "name": "Diabetes",
+    "symptoms": ["excessive thirst", "frequent urination", "weight loss", "fatigue"]
+  },
+  {
+    "name": "Hypertension",
+    "symptoms": ["often no symptoms", "sometimes headache or dizziness"]
+  },
+  {
+    "name": "Migraine",
+    "symptoms": ["one-sided throbbing headache", "nausea", "light sensitivity"]
+  },
+  {
+    "name": "Meningitis",
+    "symptoms": ["high fever", "neck stiffness", "confusion", "headache"]
+  },
+  {
+    "name": "Chickenpox",
+    "symptoms": ["itchy fluid-filled rash", "fever", "fatigue"]
+  },
+  {
+    "name": "Measles",
+    "symptoms": ["fever", "cough", "runny nose", "red rash starting on face"]
+  },
+  {
+    "name": "Hepatitis A",
+    "symptoms": ["jaundice", "fatigue", "abdominal pain", "nausea"]
+  },
+  {
+    "name": "Jaundice (general)",
+    "symptoms": ["yellow skin/eyes", "dark urine", "pale stool"]
+  },
+  {
+    "name": "Anemia",
+    "symptoms": ["fatigue", "pale skin", "dizziness", "shortness of breath"]
+  },
+  {
+    "name": "Hypothyroidism",
+    "symptoms": ["weight gain", "cold intolerance", "fatigue", "dry skin"]
+  },
+  {
+    "name": "Hyperthyroidism",
+    "symptoms": ["weight loss", "sweating", "fast heartbeat", "anxiety"]
+  },
+  {
+    "name": "Allergic rhinitis",
+    "symptoms": ["sneezing", "runny nose", "itchy eyes", "seasonal pattern"]
+  },
+  {
+    "name": "Sinusitis",
+    "symptoms": ["facial pain", "nasal blockage", "headache", "thick nasal discharge"]
+  },
+  {
+    "name": "GERD (acid reflux)",
+    "symptoms": ["burning chest pain after meals", "sour taste", "cough at night"]
+  },
+  {
+    "name": "Peptic ulcer",
+    "symptoms": ["stomach pain when empty", "relief after eating", "bloating"]
+  }
+]
