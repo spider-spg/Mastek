@@ -373,37 +373,27 @@ class DynamicDiseaseDiscovery:
                 logger.info(f"  ✓ {user_disease['name']} (User)")
 
         # Source 2: SNOMED (comprehensive but slower)
-        if len(discovered) < limit:
-            logger.info(f"Querying SNOMED for {body_area} disorders...")
-            snomed_term = self.body_area_map.get(body_area, body_area)
-            snomed_diseases = self.snomed.search_by_body_area(snomed_term, limit=limit-len(discovered))
-            for disease in snomed_diseases:
-                disease_name = disease['term']
-                # Skip if already found from NHS UK or user
-                if disease_name.lower() in discovered_names:
-                    continue
-                disease_data = self._enrich_disease_data(disease)
-                if disease_data and disease_data['symptoms']:
-                    discovered.append(disease_data)
-                    discovered_names.add(disease_name.lower())
-                    logger.info(f"  ✓ {disease_name} (SNOMED)")
+        # The following block is commented out to avoid SNOMED access
+        # if len(discovered) < limit:
+        #     logger.info(f"Querying SNOMED for {body_area} disorders...")
+        #     snomed_term = self.body_area_map.get(body_area, body_area)
+        #     snomed_diseases = self.snomed.search_by_body_area(snomed_term, limit=limit-len(discovered))
+        #     for disease in snomed_diseases:
+        #         disease_name = disease['term']
+        #         # Skip if already found from NHS UK or user
+        #         if disease_name.lower() in discovered_names:
+        #             continue
+        #         disease_data = self._enrich_disease_data(disease)
+        #         if disease_data and disease_data['symptoms']:
+        #             discovered.append(disease_data)
+        #             discovered_names.add(disease_name.lower())
+        #             logger.info(f"  ✓ {disease_name} (SNOMED)")
 
         logger.info(f"Discovered {len(discovered)} total diseases for {body_area}")
         return discovered[:limit]
     
     def _find_snomed_code_for_disease(self, disease_name: str) -> Optional[str]:
-        """Try to find SNOMED code for an NHS UK disease name"""
-        # Load descriptions if not already loaded
-        if not self.snomed.descriptions_cache:
-            self.snomed.load_descriptions()
-        
-        # Search for matching term
-        disease_lower = disease_name.lower()
-        for concept_id, descriptions in self.snomed.descriptions_cache.items():
-            for desc in descriptions:
-                if disease_lower in desc['term'].lower():
-                    return concept_id
-        
+        # SNOMED code lookup disabled by user request
         return None
     
     def _enrich_disease_data(self, snomed_disease: Dict[str, Any]) -> Optional[Dict[str, Any]]:
