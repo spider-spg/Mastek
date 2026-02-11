@@ -1,0 +1,17 @@
+{
+  "name": "Breast cancer",
+  "body_area": "chest",
+  "gender": "female",
+  "symptoms": [
+    "lump in breast or underarm",
+    "change in breast shape or size",
+    "skin changes on breast (dimpling, redness, peeling)",
+    "nipple discharge or inversion"
+  ],
+  "questions": [
+    "Have you noticed a lump in your breast or underarm?",
+    "Has your breast changed in shape or size recently?",
+    "Are there any skin changes on your breast, such as dimpling, redness, or peeling?",
+    "Is there any nipple discharge or has your nipple become inverted?"
+  ]
+}

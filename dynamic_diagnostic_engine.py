@@ -330,26 +330,29 @@ class DynamicDiseaseDiscovery:
         logger.info(f"Discovering diseases for body area: {body_area}")
         
         discovered = []
-        discovered_names = set()  # Prevent duplicates
+        discovered_names = set()  # Prevent duplicates by name (case-insensitive)
+
+        # Helper to add only unique diseases
+        def add_unique_disease(disease, source_label=None):
+            name = disease.get('name', '').strip().lower()
+            if name and name not in discovered_names:
+                discovered.append(disease)
+                discovered_names.add(name)
+                if source_label:
+                    logger.info(f"  ✓ {disease.get('name')} ({source_label})")
+
         # Source 1.5: User-provided hardcoded diseases
         for user_disease in self.HARDCODED_DISEASES.get(body_area, []):
-            if user_disease['name'].lower() not in discovered_names:
-                discovered.append(user_disease)
-                discovered_names.add(user_disease['name'].lower())
-                logger.info(f"  ✓ {user_disease['name']} (User)")
-        
+            add_unique_disease(user_disease, 'User')
+
         # Source 1: NHS UK (fast, reliable)
         logger.info(f"Querying NHS UK for {body_area} conditions...")
         nhs_conditions = self.nhs_scraper.get_conditions_for_body_area(body_area)
-        
         for nhs_slug in nhs_conditions[:limit]:
             nhs_data = self.nhs_scraper.get_disease_info(nhs_slug)
             if nhs_data:
                 disease_name = nhs_data['name']
-                
-                # Try to find SNOMED code for this NHS condition
                 snomed_id = self._find_snomed_code_for_disease(disease_name)
-                
                 disease_data = {
                     'snomed_id': snomed_id if snomed_id else f"NHS_{nhs_slug}",
                     'name': disease_name,
@@ -359,18 +362,8 @@ class DynamicDiseaseDiscovery:
                     'nhs_url': nhs_data['url'],
                     'overview': nhs_data.get('overview', '')
                 }
-                
-                if disease_data['symptoms']:  # Only add if has symptoms
-                    discovered.append(disease_data)
-                    discovered_names.add(disease_name.lower())
-                    logger.info(f"  ✓ {disease_name} (NHS UK)")
-        
-        # Source 1.5: User-provided hardcoded diseases
-        for user_disease in self.HARDCODED_DISEASES.get(body_area, []):
-            if user_disease['name'].lower() not in discovered_names:
-                discovered.append(user_disease)
-                discovered_names.add(user_disease['name'].lower())
-                logger.info(f"  ✓ {user_disease['name']} (User)")
+                if disease_data['symptoms']:
+                    add_unique_disease(disease_data, 'NHS UK')
 
         # Source 2: SNOMED (comprehensive but slower)
         # The following block is commented out to avoid SNOMED access
@@ -380,14 +373,11 @@ class DynamicDiseaseDiscovery:
         #     snomed_diseases = self.snomed.search_by_body_area(snomed_term, limit=limit-len(discovered))
         #     for disease in snomed_diseases:
         #         disease_name = disease['term']
-        #         # Skip if already found from NHS UK or user
         #         if disease_name.lower() in discovered_names:
         #             continue
         #         disease_data = self._enrich_disease_data(disease)
         #         if disease_data and disease_data['symptoms']:
-        #             discovered.append(disease_data)
-        #             discovered_names.add(disease_name.lower())
-        #             logger.info(f"  ✓ {disease_name} (SNOMED)")
+        #             add_unique_disease(disease_data, 'SNOMED')
 
         logger.info(f"Discovered {len(discovered)} total diseases for {body_area}")
         return discovered[:limit]
@@ -486,23 +476,46 @@ class DynamicDiseaseDiscovery:
         """Generate basic template questions when Gemini unavailable"""
         questions = []
         symptoms = disease_data['symptoms'][:5]  # Top 5 symptoms
-        
+
+        # List of body part keywords for arms/legs/joints
+        body_parts = [
+            'elbow', 'elbows', 'shoulder', 'shoulders', 'wrist', 'wrists', 'hand', 'hands', 'finger', 'fingers',
+            'forearm', 'forearms', 'arm', 'arms',
+            'knee', 'knees', 'leg', 'legs', 'thigh', 'thighs', 'ankle', 'ankles', 'foot', 'feet', 'toe', 'toes',
+            'joint', 'joints'
+        ]
+
         for i, symptom_data in enumerate(symptoms):
             symptom = symptom_data['symptom']
-            
+            symptom_lower = symptom.lower()
+            # If the symptom is just a body part or contains only a body part, clarify as pain in that part
+            matched_part = None
+            for part in body_parts:
+                if symptom_lower.strip() == part or (symptom_lower.strip() in [f"{part}s", f"{part} and {part}s"]):
+                    matched_part = part
+                    break
+                # If symptom is like 'forearms and wrists', 'hands and fingers', etc.
+                if all(p in body_parts for p in [s.strip() for s in symptom_lower.replace('and',',').split(',')]):
+                    matched_part = symptom
+                    break
+            if matched_part:
+                question_text = f"Do you have pain in your {matched_part}?"
+            else:
+                question_text = f"Do you have: {symptom}?"
+
             # Create question ID that includes symptom keywords for matching
-            symptom_key = symptom.lower().replace(' ', '_').replace(',', '')[:30]
-            
+            symptom_key = symptom_lower.replace(' ', '_').replace(',', '')[:30]
+
             questions.append({
                 'id': f"symptom_{symptom_key}",
-                'text': f"Do you have: {symptom}?",
+                'text': question_text,
                 'options': ['Yes', 'No'],
                 'type': 'single_choice',
                 'priority': 5,
                 'symptom_match': symptom,
                 'disease_id': disease_data['snomed_id']
             })
-        
+
         return questions
     
     def prioritize_questions(self, all_questions: List[Dict[str, Any]], discovered_diseases: List[Dict[str, Any]]) -> List[Dict[str, Any]]:

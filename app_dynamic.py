@@ -59,26 +59,50 @@ def terminal_interface():
     
     # print("✅ Engine initialized!\n")
     
+    # Ask gender and age first
+    print("👤 Please answer a couple of questions before we begin:")
+    while True:
+        gender_input = input("What is your gender? (M/F/Other): ").strip().lower()
+        if gender_input in ['m', 'male']:
+            user_gender = 'male'
+            break
+        elif gender_input in ['f', 'female']:
+            user_gender = 'female'
+            break
+        elif gender_input in ['other', 'o']:
+            user_gender = 'other'
+            break
+        print("  ✗ Please enter M, F, or Other.")
+    while True:
+        age_input = input("What is your age? (in years): ").strip()
+        try:
+            user_age = int(age_input)
+            if user_age > 0 and user_age < 130:
+                break
+        except:
+            pass
+        print("  ✗ Please enter a valid age.")
+
     # Phase 1: Body area selection
     print("📍Body Area Selection")
     print("-" * 70)
     print("Available body areas:\n")
-    
+
     for key, area in BODY_AREAS.items():
         print(f"  {key}. {area['name']} ({area['desc']})")
-    
+
     body_input = input("\nEnter the numbers of affected areas (comma-separated, e.g., 1,12):\n➤ ").strip()
-    
+
     selected_areas = []
     for num in body_input.split(','):
         num = num.strip()
         if num in BODY_AREAS:
             selected_areas.append(BODY_AREAS[num]['id'])
-    
+
     if not selected_areas:
         print("❌ No valid areas selected. Exiting.")
         return
-    
+
     print(f"\n✅ Selected areas: {', '.join([BODY_AREAS[k]['name'] for k in body_input.split(',') if k.strip() in BODY_AREAS])}")
     
     # Phase 2: Dynamic disease discovery
@@ -106,6 +130,9 @@ def terminal_interface():
         # Add JSON diseases for this area
         for jd in json_diseases:
             if jd.get("body_area") == area:
+                # Skip breast cancer for non-female users
+                if jd.get("name", "").lower() == "breast cancer" and user_gender != "female":
+                    continue
                 # Convert to dynamic-like dict
                 all_discovered_diseases.append({
                     'name': jd['name'],
@@ -190,20 +217,40 @@ def terminal_interface():
     print("=" * 70)
 
     user_answers = {}
+    # --- Urinary/Prostate logic ---
+    urinary_keywords = [
+        'urinary', 'urination', 'urine', 'burning urination', 'frequent urge', 'lower abdominal pain',
+        'prostate', 'difficulty urinating', 'weak stream', 'nocturia', 'dribbling', 'hesitancy'
+    ]
+    has_urinary_symptom = False
+    for disease in merged_diseases:
+        for s in disease.get('symptoms', []):
+            if any(kw in s.get('symptom', '').lower() for kw in urinary_keywords):
+                has_urinary_symptom = True
+                break
+        if has_urinary_symptom:
+            break
+
+    # user_age and user_gender already set at the start; do not ask again
+
     remaining_diseases = merged_diseases.copy()
-    asked_questions = set()
+    asked_questions = set()  # (disease_name, question_text)
+    asked_question_texts = set()  # question_text only, to prevent duplicate questions in a round
     round_num = 1
     while remaining_diseases:
         print(f"\n--- Question Round {round_num} ---")
         questions_this_round = []
+        round_question_texts = set()
         for disease in remaining_diseases:
             qs = disease.get('questions') or engine.generate_questions_for_disease(disease)
-            # Find first unasked question for this disease
             for q in qs:
                 qid = (disease['name'], q['text'])
-                if qid not in asked_questions:
+                qtext = q['text'].strip().lower()
+                # Skip if this question text already asked in this round or before
+                if qid not in asked_questions and qtext not in round_question_texts:
                     questions_this_round.append((disease, q))
                     asked_questions.add(qid)
+                    round_question_texts.add(qtext)
                     break
         if not questions_this_round:
             break
@@ -230,6 +277,31 @@ def terminal_interface():
         # Only continue with diseases where user said 'Yes' to last question
         remaining_diseases = next_diseases
         round_num += 1
+
+    # --- Prostate warning logic ---
+    if has_urinary_symptom and user_gender == 'male' and user_age is not None and user_age >= 60:
+        print("\n⚠️  NOTE: You are a male aged 60 or above with urinary symptoms. This could indicate a prostate issue (such as benign prostatic hyperplasia or prostate cancer). Please seek medical attention for further evaluation.\n")
+
+    # Move breast cancer warning logic after simplified_answers is defined
+        # --- Breast cancer warning logic ---
+        # Only check for female users
+        if user_gender == 'female':
+            breast_cancer_symptoms = [
+                'lump in breast', 'lump in underarm', 'change in breast shape', 'change in breast size',
+                'skin changes on breast', 'dimpling', 'redness', 'peeling', 'nipple discharge', 'nipple inversion'
+            ]
+            chest_symptom_keys = [k for k in simplified_answers.keys() if 'chest' in k or 'breast' in k]
+            breast_cancer_triggered = False
+            for k in chest_symptom_keys:
+                answer = simplified_answers.get(k, '').lower()
+                for bc_sym in breast_cancer_symptoms:
+                    if bc_sym in k and answer == 'yes':
+                        breast_cancer_triggered = True
+                        break
+                if breast_cancer_triggered:
+                    break
+            if breast_cancer_triggered:
+                print("\n⚠️  NOTE: You are female and reported symptoms that could indicate breast cancer (such as breast lump, skin changes, or nipple discharge). Please seek medical attention for proper evaluation.\n")
     print("\n" + "=" * 70)
     print("🔬 Running Diagnostic Analysis")
     print("=" * 70)
@@ -242,6 +314,7 @@ def terminal_interface():
             symptom_key = data['symptom'].lower().replace(' ', '_')[:30]
             simplified_answers[f"symptom_{symptom_key}"] = data['answer']
 
+
     diagnoses = engine.diagnose_from_answers(merged_diseases, simplified_answers)
 
     if not diagnoses:
@@ -252,9 +325,18 @@ def terminal_interface():
         print("   - Condition not in SNOMED/NHS UK databases")
         return
 
-    print(f"✅ Found {len(diagnoses)} possible condition(s):\n")
+    # Deduplicate diagnoses by disease name (case-insensitive)
+    unique_diagnoses = []
+    seen_diseases = set()
+    for diag in diagnoses:
+        disease_name = diag['disease'].strip().lower()
+        if disease_name not in seen_diseases:
+            unique_diagnoses.append(diag)
+            seen_diseases.add(disease_name)
+
+    print(f"✅ Found {len(unique_diagnoses)} possible condition(s):\n")
     print("=" * 70)
-    for i, diagnosis in enumerate(diagnoses[:5], 1):
+    for i, diagnosis in enumerate(unique_diagnoses[:5], 1):
         print(f"#{i} - {diagnosis['disease']}")
         print("=" * 70)
         print(f"Confidence: {diagnosis.get('confidence_percentage', 'N/A')} ({diagnosis.get('confidence', 'N/A')})")
